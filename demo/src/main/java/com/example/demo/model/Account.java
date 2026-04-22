@@ -1,10 +1,20 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
 @Data
+@JsonPropertyOrder({
+        "id",
+        "beneId",
+        "accountName",
+        "accountNumber",
+        "IFSC",
+        "amount",
+        "bank"
+})
 public class Account {
 
     @Id

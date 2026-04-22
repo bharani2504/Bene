@@ -2,6 +2,8 @@ package com.example.demo.repo;
 
 import com.example.demo.model.Account;
 import com.example.demo.model.Bene;
+import com.example.demo.model.ListResponse;
+import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,6 +48,14 @@ public class benerepo {
 
     String findone="Select * from bene where bene_nick_name=?";
     String accQuery = "SELECT * FROM account WHERE bene_id = ?";
+
+
+    String delete= "Delete from bene where bene_nick_name=?";
+    String accDelete="Delete from account where bene_id=?";
+
+
+    String SelectAll="Select * from bene";
+
     public String insert(Bene bene) throws SQLException {
 
         Connection con= DriverManager.getConnection(url,userName,password);
@@ -72,7 +82,7 @@ public class benerepo {
                int afffectedrows=  as.executeUpdate();
            }
            con.commit();
-           return "Bene added successfully" ;
+           return "Success";
            }
        catch(Exception e)
        {
@@ -118,5 +128,39 @@ public class benerepo {
          return bene;
        }
 
+    public String delete(String beneNicknName) throws SQLException {
+        Connection con = DriverManager.getConnection(url, userName, password);
+
+        try (PreparedStatement ps = con.prepareStatement(delete);
+             PreparedStatement ps1 = con.prepareStatement(accDelete)) {
+            Bene bene =findone(beneNicknName);
+            ps1.setLong(INT_BENE_ID,bene.getBeneId());
+            ps1.executeUpdate();
+            ps.setString(INT_BENE_NAME,beneNicknName);
+            ps.executeUpdate();
+            con.close();
+        }
+        catch(Exception e)
+        {
+         throw  new SQLException();
+        }
+
+        return "successfully deleted";
     }
+
+    public List list(boolean fetchChild) throws SQLException {
+       List<Bene>beneList=new ArrayList<>();
+       if(fetchChild){
+           Connection con = DriverManager.getConnection(url, userName, password);
+           try (PreparedStatement ps = con.prepareStatement(SelectAll)){
+               ResultSet rs = ps.executeQuery();
+               while (rs.next()){
+                   String beneNickname=rs.getString("bene_nick_name");
+                   beneList.add(findone(beneNickname));
+               }
+           }
+       }
+       return beneList;
+    }
+}
 
