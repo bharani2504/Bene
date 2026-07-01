@@ -13,11 +13,11 @@ public class WireMockConfig {
 
     @Bean(initMethod = "start", destroyMethod = "stop")
     public WireMockServer wireMockServer() {
-
+        System.out.println("Working dir: " + new java.io.File(".").getAbsolutePath());
         return new WireMockServer(
                 WireMockConfiguration.options()
                         .port(8085)
-                        .usingFilesUnderDirectory("src/main/resources/wiremock")
+                        .usingFilesUnderClasspath("wiremock")
         );
     }
 }
