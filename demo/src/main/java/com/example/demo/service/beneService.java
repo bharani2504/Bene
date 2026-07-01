@@ -5,9 +5,11 @@ import com.example.demo.model.Bene;
 import com.example.demo.model.ListResponse;
 import com.example.demo.repo.benerepo;
 import com.example.demo.util.EmailUtil;
+import com.example.demo.validator.BeneValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -20,12 +22,15 @@ public class beneService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private BeneValidation beneValidation;
+
     private Bene bene;
     private EmailUtil emailUtil;
 
-   public String insret(Bene bene) throws SQLException {
+   public String insret(Bene bene) throws SQLException, IOException {
+       beneValidation.ifscValidation(bene);
         String Status =benerepo.insert(bene);
-
         if(Status.equals("Success")){
             if (bene.getEmail() != null &&
                     bene.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {

@@ -1,0 +1,68 @@
+{
+  "info": {
+    "_postman_id": "57e5b10c-dcf3-4393-ac85-05a38768d900",
+    "name": "bene collections",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "45648374"
+  },
+  "item": [
+    {
+      "name": "http://localhost:8081/bene/submit",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"beneName\" : \"sasi\",\r\n  \"beneNicknName\": \"sk\",\r\n  \"email\": \"sasi2929\",\r\n  \"mobile\" : 96777012227,\r\n  \"account\" : [ {\r\n    \"bank\":\"KKBK\",\r\n    \"amount\" : \"5000\",\r\n    \"balance\" : 500.0,\r\n    \"accountNumber\" : \"0285815205\",\r\n    \"IFSC\" : \"KKBK000123\",\r\n    \"accountName\":\"vj\"\r\n  }, \r\n  {    \r\n    \"bank\":\"KKBK\",\r\n    \"amount\" : 5000,\r\n    \"accountNumber\" : \"1202858152\",\r\n    \"IFSC\" : \"KKBK000123\",\r\n    \"accountName\":\"vj\"\r\n  } ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/bene/submit",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "bene",
+            "submit"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8081/bene/detail",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"beneNicknName\": \"sk\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/bene/detail",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "bene",
+            "detail"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}

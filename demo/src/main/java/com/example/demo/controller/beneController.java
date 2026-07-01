@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class beneController {
     private beneService beneService;
 
     @PostMapping("/submit")
-    public ResponseEntity<String> Submit(@RequestBody Bene bene) throws SQLException {
+    public ResponseEntity<String> Submit(@RequestBody Bene bene) throws SQLException, IOException {
         String response=beneService.insret(bene);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
