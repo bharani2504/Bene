@@ -29,19 +29,27 @@ public class BeneValidation {
     }
 
     public void ifscValidation(Bene bene) {
-        if (bene.getAccount() != null) {
-            for (Account act : bene.getAccount()) {
-                if (act.getIFSC() != null) {
-                    String url = prop.getProperty("ifsc.url");
-                    Map<String, Object> response = restTemplate.postForObject(url, act.getIFSC(), Map.class);
 
-                    String ifsc = String.valueOf(response.getOrDefault("ifsc_code", ""));
-                    if (!ifsc.equalsIgnoreCase(act.getIFSC())) {
-                        throw new RuntimeException("INVALID IFSC CODE");
-                    }
-                    String bank = String.valueOf(response.getOrDefault("bank_name", ""));
-                }
-            }
-        }
+       try{
+           if (bene.getAccount() != null) {
+               for (Account act : bene.getAccount()) {
+                   if (act.getIFSC() != null) {
+                       String url = prop.getProperty("ifsc.url");
+                       Map<String, Object> response = restTemplate.postForObject(url, act.getIFSC(), Map.class);
+
+                       String ifsc = String.valueOf(response.getOrDefault("ifsc_code", ""));
+                       if (!ifsc.equalsIgnoreCase(act.getIFSC())) {
+                           throw new RuntimeException("INVALID IFSC CODE");
+                       }
+                       String bank = String.valueOf(response.getOrDefault("bank_name", ""));
+                       String branch = String.valueOf(response.getOrDefault("branch",""));
+                       act.setBranch(branch);
+                       act.setBank(bank);
+                   }
+               }
+           }
+       } catch (RuntimeException e) {
+           throw new RuntimeException(e);
+       }
     }
 }

@@ -40,11 +40,12 @@ public class benerepo {
     static final int INT_IFSC=4;
     static final int INT_AMOUNT=5;
     static final int INT_BANK=6;
+    static final int INT_BRANCH=7;
 
     static final int GET_BENE_BY_NICK_NAME=1;
 
     String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email) values(?,?,?,?)";
-    String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank) values(?,?,?,?,?,?)";
+    String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch) values(?,?,?,?,?,?,?)";
 
     String findone="Select * from bene where bene_nick_name=?";
     String accQuery = "SELECT * FROM account WHERE bene_id = ?";
@@ -79,6 +80,7 @@ public class benerepo {
                as.setString(INT_IFSC,ac.getIFSC());
                as.setString(INT_BANK,ac.getBank());
                as.setDouble(INT_AMOUNT,ac.getAmount());
+               as.setString(INT_BRANCH,ac.getBranch());
                int afffectedrows=  as.executeUpdate();
            }
            con.commit();
@@ -120,6 +122,8 @@ public class benerepo {
                         account.setAmount(rs2.getDouble("amount"));
                         account.setBank(rs2.getString("bank"));
                         account.setId(rs2.getLong("account_id"));
+                        account.setBranch(rs2.getString("branch"));
+                        account.setBeneId(beneId);
                         accounts.add(account);
                    }
                    bene.setAccount(accounts);

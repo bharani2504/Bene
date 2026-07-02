@@ -79,6 +79,11 @@
 			<artifactId>wiremock-jetty12</artifactId>
 			<version>3.13.2</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>

@@ -25,5 +25,6 @@ public class Account {
     private String IFSC;
     private Double amount;
     private String bank;
+    private String branch;
 
 }
