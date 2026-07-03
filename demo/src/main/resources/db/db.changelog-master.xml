@@ -8,5 +8,6 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.23.xsd">
 
     <include file="db/ddl/001_create_account_tbl.sql"/>
+    <include file="db/ddl/002_create_bene_audit_integration_tbl.sql"/>
 
 </databaseChangeLog>

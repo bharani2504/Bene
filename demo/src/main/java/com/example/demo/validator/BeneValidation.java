@@ -1,16 +1,16 @@
 package com.example.demo.validator;
 
+import com.example.demo.exception.BeneficiaryException;
 import com.example.demo.model.Account;
 import com.example.demo.model.Bene;
+import com.example.demo.model.ServiceRequest;
+import com.example.demo.model.ServiceResponse;
+import com.example.demo.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @Component
 public class BeneValidation {
@@ -18,31 +18,29 @@ public class BeneValidation {
     @Autowired
     private RestTemplate restTemplate;
 
-    private final Properties prop = new Properties();
-
-    public BeneValidation() throws IOException {
-        try (InputStream input = Thread.currentThread()
-                .getContextClassLoader()
-                .getResourceAsStream("application.properties")) {
-            prop.load(input);
-        }
-    }
+    @Autowired
+    private CommonService commonService;
 
     public void ifscValidation(Bene bene) {
 
        try{
+           ServiceRequest serviceRequest = new ServiceRequest();
            if (bene.getAccount() != null) {
                for (Account act : bene.getAccount()) {
                    if (act.getIFSC() != null) {
-                       String url = prop.getProperty("ifsc.url");
-                       Map<String, Object> response = restTemplate.postForObject(url, act.getIFSC(), Map.class);
+                       serviceRequest.setBeneNickname(bene.getBeneName());
+                       Map<String,Object> req=new HashMap<>();
+                       req.put("ifsc", act.getIFSC());
+                       serviceRequest.setContext(req);
 
-                       String ifsc = String.valueOf(response.getOrDefault("ifsc_code", ""));
+                       ServiceResponse response=commonService.getIfsc(serviceRequest);
+                       Map<String,Object>data=response.getData();
+                       String ifsc = String.valueOf(data.getOrDefault("ifsc_code", ""));
                        if (!ifsc.equalsIgnoreCase(act.getIFSC())) {
-                           throw new RuntimeException("INVALID IFSC CODE");
+                           throw new BeneficiaryException("INVALID IFSC CODE");
                        }
-                       String bank = String.valueOf(response.getOrDefault("bank_name", ""));
-                       String branch = String.valueOf(response.getOrDefault("branch",""));
+                       String bank = String.valueOf(data.getOrDefault("bank_name", ""));
+                       String branch = String.valueOf(data.getOrDefault("branch",""));
                        act.setBranch(branch);
                        act.setBank(bank);
                    }
