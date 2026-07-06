@@ -5,7 +5,7 @@
     "url": "/bank/list",
     "headers": {
       "Content-Type": {
-        "contains": "text/plain"
+        "contains": "application/json"
       }
     }
   },

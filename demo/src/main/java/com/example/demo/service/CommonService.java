@@ -30,7 +30,6 @@ public class CommonService {
 
     @AuditLog(serviceName ="ifsc_detail",operation = "get-Ifsc")
     public ServiceResponse getIfsc(ServiceRequest request){
-
         ServiceResponse response =new ServiceResponse();
         if(request!=null){
             String url = prop.getProperty("ifsc.url");
