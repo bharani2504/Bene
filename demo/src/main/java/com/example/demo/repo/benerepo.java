@@ -32,6 +32,7 @@ public class benerepo {
     static final int INT_BENE_NICK_NAME=2;
     static final int INT_MOBILE=3;
     static final int INT_EMAIL=4;
+    static final int INT_REFERENCE_ID=5;
 
 
     static final int INT_BENE_ID=1;
@@ -67,6 +68,7 @@ public class benerepo {
            ps.setString(INT_BENE_NICK_NAME,bene.getBeneNicknName());
            ps.setString(INT_MOBILE,bene.getMobile());
            ps.setString(INT_EMAIL,bene.getEmail());
+           ps.setString(INT_REFERENCE_ID,bene.getReferenceId());
            ps.executeUpdate();
            ResultSet re = ps.getGeneratedKeys();
            re.next();
@@ -112,6 +114,7 @@ public class benerepo {
                    bene.setBeneNicknName(rs.getString("bene_nick_name"));
                    bene.setMobile(rs.getString("mobile"));
                    bene.setEmail(rs.getString("email"));
+                   bene.setReferenceId(rs.getString("referenceId"));
                    ps1.setLong(1,beneId);
                     ResultSet rs2=ps1.executeQuery();
                     while (rs2.next()){

@@ -34,4 +34,8 @@ public class Audit {
 
     @Column(name = "data")
     private String data;
+
+    @Column(name = "service_url")
+    private String serviceUrl;
+
 }

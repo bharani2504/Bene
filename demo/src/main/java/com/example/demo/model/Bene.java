@@ -15,6 +15,7 @@ import java.util.List;
         "beneNicknName",
         "mobile",
         "email",
+        "referenceId",
         "accounts"
 })
 public class Bene {
@@ -27,6 +28,7 @@ public class Bene {
     private String beneNicknName;
     private String mobile;
     private String email;
+    private String referenceId;
     private List<Account> account;
 
 }

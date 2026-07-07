@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class beneService {
@@ -29,7 +31,7 @@ public class beneService {
     private EmailUtil emailUtil;
 
    public String insret(Bene bene) throws SQLException, IOException {
-       beneValidation.ifscValidation(bene);
+       beneValidation.submitRequestValidation(bene);
         String Status =benerepo.insert(bene);
         if(Status.equals("Success")){
             if (bene.getEmail() != null &&
@@ -48,7 +50,7 @@ public class beneService {
 
     public Bene find (String beneNicknName) throws SQLException {
              bene=  benerepo.findone(beneNicknName);
-       return bene;
+             return bene;
     }
 
     public void delete(String beneNicknName) throws SQLException {
@@ -66,5 +68,12 @@ public class beneService {
 
         }
        return re;
+    }
+
+
+    public String referenceId() {
+        UUID uuid = UUID.randomUUID();
+        String number = new BigInteger(uuid.toString().replace("-", ""), 16).toString();
+        return "REF" + number.substring(0, 15);
     }
 }

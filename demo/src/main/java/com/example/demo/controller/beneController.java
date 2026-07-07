@@ -25,6 +25,8 @@ public class beneController {
 
     @PostMapping("/submit")
     public ResponseEntity<String> Submit(@RequestBody Bene bene) throws SQLException, IOException {
+        String referenceId=beneService.referenceId();
+        bene.setReferenceId(referenceId);
         String response=beneService.insret(bene);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

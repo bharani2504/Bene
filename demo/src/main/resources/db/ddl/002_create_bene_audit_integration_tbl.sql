@@ -13,3 +13,6 @@
       responseString VARCHAR(500),
       data VARCHAR(500)
 );
+
+--changeset beneficiary:Bene_Auidt-2026070600
+ALTER table BENE_INTEGRATION_AUDIT add column service_url VARCHAR(255);
