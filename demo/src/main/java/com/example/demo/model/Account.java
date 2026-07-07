@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -26,5 +27,8 @@ public class Account {
     private Double amount;
     private String bank;
     private String branch;
+
+    @JsonProperty(defaultValue = "N")
+    private String deleAcctFlag;
 
 }

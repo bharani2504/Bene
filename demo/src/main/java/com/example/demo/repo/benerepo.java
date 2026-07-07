@@ -2,6 +2,7 @@ package com.example.demo.repo;
 
 import com.example.demo.model.Account;
 import com.example.demo.model.Bene;
+import com.example.demo.model.ListRequest;
 import com.example.demo.model.ListResponse;
 import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,7 @@ public class benerepo {
     static final int INT_MOBILE=3;
     static final int INT_EMAIL=4;
     static final int INT_REFERENCE_ID=5;
+    static final int INT_DEL_FLAG=6;
 
 
     static final int INT_BENE_ID=1;
@@ -42,11 +44,12 @@ public class benerepo {
     static final int INT_AMOUNT=5;
     static final int INT_BANK=6;
     static final int INT_BRANCH=7;
+    static final int INT_DEL_ACCT_FLAG=8;
 
     static final int GET_BENE_BY_NICK_NAME=1;
 
-    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email) values(?,?,?,?)";
-    String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch) values(?,?,?,?,?,?,?)";
+    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag) values(?,?,?,?,?,?)";
+    String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag) values(?,?,?,?,?,?,?,?)";
 
     String findone="Select * from bene where bene_nick_name=?";
     String accQuery = "SELECT * FROM account WHERE bene_id = ?";
@@ -56,7 +59,6 @@ public class benerepo {
     String accDelete="Delete from account where bene_id=?";
 
 
-    String SelectAll="Select * from bene";
 
     public String insert(Bene bene) throws SQLException {
 
@@ -69,6 +71,7 @@ public class benerepo {
            ps.setString(INT_MOBILE,bene.getMobile());
            ps.setString(INT_EMAIL,bene.getEmail());
            ps.setString(INT_REFERENCE_ID,bene.getReferenceId());
+           ps.setString(INT_DEL_FLAG,bene.getDelFlag());
            ps.executeUpdate();
            ResultSet re = ps.getGeneratedKeys();
            re.next();
@@ -83,6 +86,7 @@ public class benerepo {
                as.setString(INT_BANK,ac.getBank());
                as.setDouble(INT_AMOUNT,ac.getAmount());
                as.setString(INT_BRANCH,ac.getBranch());
+               as.setString(INT_DEL_ACCT_FLAG,ac.getDeleAcctFlag());
                int afffectedrows=  as.executeUpdate();
            }
            con.commit();
@@ -115,6 +119,7 @@ public class benerepo {
                    bene.setMobile(rs.getString("mobile"));
                    bene.setEmail(rs.getString("email"));
                    bene.setReferenceId(rs.getString("referenceId"));
+                   bene.setDelFlag(rs.getString("delFlag"));
                    ps1.setLong(1,beneId);
                     ResultSet rs2=ps1.executeQuery();
                     while (rs2.next()){
@@ -126,6 +131,7 @@ public class benerepo {
                         account.setBank(rs2.getString("bank"));
                         account.setId(rs2.getLong("account_id"));
                         account.setBranch(rs2.getString("branch"));
+                        account.setDeleAcctFlag(rs2.getString("delAccFlag"));
                         account.setBeneId(beneId);
                         accounts.add(account);
                    }
@@ -155,11 +161,23 @@ public class benerepo {
         return "successfully deleted";
     }
 
-    public List list(boolean fetchChild) throws SQLException {
+    public List list(ListRequest request) throws SQLException {
        List<Bene>beneList=new ArrayList<>();
-       if(fetchChild){
+       if(request.isFetchChild()){
            Connection con = DriverManager.getConnection(url, userName, password);
-           try (PreparedStatement ps = con.prepareStatement(SelectAll)){
+           int page =request.getPage().get(0).getPage();
+           int size=request.getPage().get(0).getSize();
+
+           int pg=page*size;
+          String  value =request.getSort().get(0).getSortBy();
+          String sortOrder=request.getSort().get(0).getSort();
+           String selectAll = "SELECT * FROM bene ORDER BY " + value + " " + sortOrder + " LIMIT ?, ?";
+
+
+           try (PreparedStatement ps = con.prepareStatement(selectAll)){
+               ps.setInt(1,pg);
+               ps.setInt(2,size);
+               System.out.println(selectAll);
                ResultSet rs = ps.executeQuery();
                while (rs.next()){
                    String beneNickname=rs.getString("bene_nick_name");

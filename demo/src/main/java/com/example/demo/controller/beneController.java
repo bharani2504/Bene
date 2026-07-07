@@ -45,7 +45,7 @@ public class beneController {
 
     @PostMapping("/list")
     public ResponseEntity<ListResponse> list(@RequestBody ListRequest request) throws SQLException {
-        ListResponse bn =beneService.list(request.isFetchChild());
+        ListResponse bn =beneService.list(request);
         return new ResponseEntity<>(bn,HttpStatus.OK);
     }
 

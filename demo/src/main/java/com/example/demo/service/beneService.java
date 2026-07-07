@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.model.Bene;
+import com.example.demo.model.ListRequest;
 import com.example.demo.model.ListResponse;
 import com.example.demo.repo.benerepo;
 import com.example.demo.util.EmailUtil;
@@ -57,8 +58,8 @@ public class beneService {
         benerepo.delete(beneNicknName);
     }
 
-    public ListResponse list(boolean fetchChild) throws SQLException {
-       List response =benerepo.list(fetchChild);
+    public ListResponse list(ListRequest request) throws SQLException {
+       List response =benerepo.list(request);
         ListResponse re = new ListResponse();
         re.setData(response);
         int total = response.size();

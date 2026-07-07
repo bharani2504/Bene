@@ -94,7 +94,7 @@ public class BeneValidation {
                        Map<String,Object>data=response.getData();
                        String ifsc = String.valueOf(data.getOrDefault("ifsc_code", ""));
                        if (!ifsc.equalsIgnoreCase(act.getIFSC())) {
-                           throw new BeneficiaryException("INVALID IFSC CODE");
+                           applyError("INVALID IFSC CODE");
                        }
                        String bank = String.valueOf(data.getOrDefault("bank_name", ""));
                        String branch = String.valueOf(data.getOrDefault("branch",""));
