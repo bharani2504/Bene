@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.model.Bene;
+import com.example.demo.model.DeleteRequest;
 import com.example.demo.model.ListRequest;
 import com.example.demo.model.ListResponse;
 import com.example.demo.repo.benerepo;
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-public class beneService {
+public class BeneService {
 
     @Autowired
     private benerepo benerepo;
@@ -54,8 +55,11 @@ public class beneService {
              return bene;
     }
 
-    public void delete(String beneNicknName) throws SQLException {
-        benerepo.delete(beneNicknName);
+    public void delete(DeleteRequest request) throws SQLException {
+       if(request.getBeneNickName()!=null) {
+           beneValidation.deleteValidator(request);
+           benerepo.Delete(request);
+       }
     }
 
     public ListResponse list(ListRequest request) throws SQLException {

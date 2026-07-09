@@ -1,9 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.Bene;
+import com.example.demo.model.DeleteRequest;
 import com.example.demo.model.ListRequest;
 import com.example.demo.model.ListResponse;
-import com.example.demo.service.beneService;
+import com.example.demo.service.BeneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 
 @RestController
 @RequestMapping("bene")
-public class beneController {
+public class BeneController {
 
     @Autowired
-    private beneService beneService;
+    private BeneService beneService;
 
     @PostMapping("/submit")
     public ResponseEntity<String> Submit(@RequestBody Bene bene) throws SQLException, IOException {
@@ -38,8 +38,8 @@ public class beneController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<String> delete(@RequestBody Bene bene) throws SQLException {
-         beneService.delete(bene.getBeneNicknName());
+    public ResponseEntity<String> delete(@RequestBody DeleteRequest request) throws SQLException {
+         beneService.delete(request);
         return new ResponseEntity<>("Successfully deleted",HttpStatus.OK);
     }
 

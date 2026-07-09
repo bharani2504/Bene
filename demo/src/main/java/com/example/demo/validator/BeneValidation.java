@@ -1,15 +1,11 @@
 package com.example.demo.validator;
 
 import com.example.demo.exception.BeneficiaryException;
-import com.example.demo.model.Account;
-import com.example.demo.model.Bene;
-import com.example.demo.model.ServiceRequest;
-import com.example.demo.model.ServiceResponse;
+import com.example.demo.model.*;
 import com.example.demo.repo.benerepo;
 import com.example.demo.service.CommonService;
-import com.example.demo.service.beneService;
+import org.hibernate.sql.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -111,5 +107,14 @@ public class BeneValidation {
 
     public BeneficiaryException applyError(String error){
         throw  new BeneficiaryException(error);
+    }
+
+    public void deleteValidator(DeleteRequest request) throws SQLException {
+
+     Bene bene=benerepo.findone(request.getBeneNickName());
+     if(bene.getDelFlag().equals("Y")){
+         applyError("Beneficiary is already marked as deleted");
+     }
+     request.setDelFlag("Y");
     }
 }

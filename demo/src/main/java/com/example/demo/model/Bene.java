@@ -30,10 +30,9 @@ public class Bene {
     private String mobile;
     private String email;
     private String referenceId;
-
     @JsonProperty(defaultValue = "N")
     private String delFlag;
-
+    private String remarks;
     private List<Account> account;
 
 }

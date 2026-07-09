@@ -11,3 +11,9 @@ ALTER table bene add column delFlag VARCHAR(10);
 
 --changeset beneficiary:Bene_table-2026070701
 ALTER table account add column delAccFlag VARCHAR(10);
+
+--changeset beneficiary:Bene_table-2026070900
+ALTER table account add column remarks VARCHAR(255);
+
+--changeset beneficiary:Bene_table-2026070901
+ALTER table bene add column remarks VARCHAR(255);
