@@ -117,4 +117,20 @@ public class BeneValidation {
      }
      request.setDelFlag("Y");
     }
+
+    public void amend(Amend request) throws SQLException {
+
+        Bene bn=benerepo.findone(request.getBeneNicknName());
+
+        if(bn==null){
+            applyError("BeneNickName is non amendable filed");
+        }
+
+        if(bn!=null){
+
+
+        }
+
+
+    }
 }

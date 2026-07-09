@@ -1,9 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.Bene;
-import com.example.demo.model.DeleteRequest;
-import com.example.demo.model.ListRequest;
-import com.example.demo.model.ListResponse;
+import com.example.demo.model.*;
 import com.example.demo.service.BeneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,4 +46,9 @@ public class BeneController {
         return new ResponseEntity<>(bn,HttpStatus.OK);
     }
 
+    @PostMapping("/amend")
+    public ResponseEntity<String> amend(@RequestBody Amend request) throws SQLException {
+        beneService.amend(request);
+        return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
+    }
 }

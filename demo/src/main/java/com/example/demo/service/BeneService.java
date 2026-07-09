@@ -1,10 +1,7 @@
 package com.example.demo.service;
 
 
-import com.example.demo.model.Bene;
-import com.example.demo.model.DeleteRequest;
-import com.example.demo.model.ListRequest;
-import com.example.demo.model.ListResponse;
+import com.example.demo.model.*;
 import com.example.demo.repo.benerepo;
 import com.example.demo.util.EmailUtil;
 import com.example.demo.validator.BeneValidation;
@@ -81,4 +78,11 @@ public class BeneService {
         String number = new BigInteger(uuid.toString().replace("-", ""), 16).toString();
         return "REF" + number.substring(0, 15);
     }
+
+    public void amend(Amend request) throws SQLException {
+        if(request.getBeneNicknName()!=null){
+            beneValidation.amend(request);
+
+        }
+      }
 }
