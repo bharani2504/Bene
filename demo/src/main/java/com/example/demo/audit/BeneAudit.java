@@ -5,9 +5,12 @@ import com.example.demo.model.Audit;
 import com.example.demo.model.ServiceRequest;
 import com.example.demo.model.ServiceResponse;
 import com.example.demo.service.BeneAuditService;
+import com.example.demo.service.CommonService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +24,7 @@ public class BeneAudit {
         this.beneAuditService=beneAuditService;
     }
     private static BeneAuditService beneAuditService;
-
+    private static final Logger log = LoggerFactory.getLogger(BeneAudit.class);
 
     @Around("@annotation(auditLog)")
     public Object around (ProceedingJoinPoint joinPoint, AuditLog auditLog) throws Throwable {
@@ -30,6 +33,7 @@ public class BeneAudit {
         String serviceName=auditLog.serviceName();
         String operation= auditLog.operation();
 
+        log.info("Bene audit",serviceName,operation);
         Object[] request =joinPoint.getArgs();
 
         ServiceRequest serviceRequest=null;
@@ -44,6 +48,7 @@ public class BeneAudit {
                 if(response!=null && response instanceof ServiceResponse serviceResponse){
                      Audit audit=new Audit();
                      extracted(audit,serviceRequest,serviceResponse,serviceName,operation);
+                     log.info("audit values has been set");
                      beneAuditService.createLog(audit);
                 }
             }

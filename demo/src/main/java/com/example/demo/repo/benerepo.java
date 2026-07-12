@@ -2,6 +2,8 @@ package com.example.demo.repo;
 
 import com.example.demo.model.*;
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,6 +45,8 @@ public class benerepo {
 
     static final int GET_BENE_BY_NICK_NAME=1;
 
+    private static final Logger log = LoggerFactory.getLogger(benerepo.class);
+
     String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag) values(?,?,?,?,?,?)";
     String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag) values(?,?,?,?,?,?,?,?)";
 
@@ -59,6 +63,7 @@ public class benerepo {
         Connection con= DriverManager.getConnection(url,userName,password);
         con.setAutoCommit(false);
 
+
        try(PreparedStatement ps = con.prepareStatement(insertbene,Statement.RETURN_GENERATED_KEYS)){
            ps.setString(INT_BENE_NAME,bene.getBeneName());
            ps.setString(INT_BENE_NICK_NAME,bene.getBeneNicknName());
@@ -67,6 +72,8 @@ public class benerepo {
            ps.setString(INT_REFERENCE_ID,bene.getReferenceId());
            ps.setString(INT_DEL_FLAG,bene.getDelFlag());
            ps.executeUpdate();
+
+           log.info("bene insert query",ps.executeUpdate());
            ResultSet re = ps.getGeneratedKeys();
            re.next();
            int total = re.getInt(INT_BENE_ID);
@@ -81,14 +88,18 @@ public class benerepo {
                as.setDouble(INT_AMOUNT,ac.getAmount());
                as.setString(INT_BRANCH,ac.getBranch());
                as.setString(INT_DEL_ACCT_FLAG,ac.getDeleAcctFlag());
-               int afffectedrows=  as.executeUpdate();
+               int affectedrows=  as.executeUpdate();
+
+               log.info("account affected rows",affectedrows);
            }
            con.commit();
+           log.info("Beneficiary successfully created");
            return "Success";
            }
        catch(Exception e)
        {
            con.rollback();
+           log.warn("exception occured",e);
            return "Give the Fields correctly";
        }
        finally {
@@ -98,10 +109,12 @@ public class benerepo {
 
        public Bene findone(String beneNicknName) throws SQLException {
            Connection con= DriverManager.getConnection(url,userName,password);
+
            Bene bene=new Bene();
            List<Account>accounts=new ArrayList<>();
+
            try(PreparedStatement ps = con.prepareStatement(findone);
-               PreparedStatement ps1 = con.prepareStatement(accQuery) ){
+               PreparedStatement ps1 = con.prepareStatement(accQuery)){
                ps.setString(GET_BENE_BY_NICK_NAME,beneNicknName);
                ResultSet rs =ps.executeQuery();
 
@@ -115,7 +128,8 @@ public class benerepo {
                    bene.setReferenceId(rs.getString("referenceId"));
                    bene.setDelFlag(rs.getString("delFlag"));
                    ps1.setLong(1,beneId);
-                    ResultSet rs2=ps1.executeQuery();
+                   ResultSet rs2=ps1.executeQuery();
+
                     while (rs2.next()){
                         Account account=new Account();
                         account.setAccountName(rs2.getString("account_name"));
@@ -151,7 +165,6 @@ public class benerepo {
            try (PreparedStatement ps = con.prepareStatement(selectAll)){
                ps.setInt(1,pg);
                ps.setInt(2,size);
-               System.out.println(selectAll);
                ResultSet rs = ps.executeQuery();
                while (rs.next()){
                    String beneNickname=rs.getString("bene_nick_name");
@@ -197,9 +210,10 @@ public class benerepo {
         } catch(Exception e)
         {
             con.rollback();
+            log.warn("exception occured",e);
             return "Can't able to delete";
         }
-
+        log.info("Beneficiary deleted");
        return "Beneficiary Successfully marked as deleted";
    }
 
@@ -224,14 +238,17 @@ public class benerepo {
                 as.setDouble(3,ac.getAmount());
                 as.setDate(4, (Date) ac.getLastupdated());
                 as.setLong(5,bn.getBeneId());
-                int afffectedrows=  as.executeUpdate();
+                int affectedrows=  as.executeUpdate();
             }
             con.commit();
+
+            log.info("bene amended successfully");
             return "Updated Successfully";
         }
         catch(Exception e)
         {
             con.rollback();
+            log.warn("exception=>",e);
             return "Give the Fields correctly";
         }
         finally {

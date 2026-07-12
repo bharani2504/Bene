@@ -3,6 +3,8 @@ package com.example.demo.service;
 import com.example.demo.annotation.AuditLog;
 import com.example.demo.model.ServiceRequest;
 import com.example.demo.model.ServiceResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +20,7 @@ public class CommonService {
     @Autowired
     private RestTemplate restTemplate;
 
+    private static final Logger log = LoggerFactory.getLogger(CommonService.class);
     private final Properties prop = new Properties();
     public CommonService() throws IOException {
         try (InputStream input = Thread.currentThread()
@@ -37,6 +40,8 @@ public class CommonService {
             response.setData(resp);
             response.setStatus("SUCCESS");
             response.setResponseString(resp.toString());
+            log.info("service response =>",response);
+
         }
 
         return response;

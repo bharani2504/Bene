@@ -5,6 +5,8 @@ import com.example.demo.model.*;
 import com.example.demo.repo.benerepo;
 import com.example.demo.service.CommonService;
 import org.hibernate.sql.Delete;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -28,9 +30,10 @@ public class BeneValidation {
     @Autowired
     private benerepo benerepo ;
 
-
+    private static final Logger log = LoggerFactory.getLogger(BeneValidation.class);
     public void submitRequestValidation (Bene bene) throws SQLException {
 
+        log.info("request=>",bene);
         if(bene.getBeneNicknName()!=null){
 
             Bene bn=benerepo.findone(bene.getBeneNicknName());
@@ -61,6 +64,7 @@ public class BeneValidation {
                 }
             }
 
+            log.info("Bene ifsc validation");
             ifscValidation(bene);
             for(Account ac : bene.getAccount()){
                 if(ac.getAccountNumber()==null){
@@ -87,8 +91,11 @@ public class BeneValidation {
                        serviceRequest.setBeneNickname(bene.getBeneName());
                        Map<String,Object> req=new HashMap<>();
                        req.put("ifsc", act.getIFSC());
+
                        serviceRequest.setContext(req);
                        serviceRequest.setRefenceID(bene.getReferenceId());
+                       log.info("service request=>",serviceRequest);
+
                        ServiceResponse response=commonService.getIfsc(serviceRequest);
                        Map<String,Object>data=response.getData();
                        String ifsc = String.valueOf(data.getOrDefault("ifsc_code", ""));
@@ -123,6 +130,7 @@ public class BeneValidation {
 
     public void amend(Amend request) throws SQLException {
 
+        log.info("amend request request validation started");
         Bene bn=benerepo.findone(request.getBeneNicknName());
 
         if(bn.getDelFlag()!= null ){
@@ -137,10 +145,10 @@ public class BeneValidation {
             applyError("Beneficiary nick name is non amendable");
         }
 
-         List<Account> ac = bn.getAccount();
+          List<Account> ac = bn.getAccount();
           List<Account>amendAccount =request.getAccount();
 
-        Map<String, Account> existingMap = ac.stream()
+         Map<String, Account> existingMap = ac.stream()
                 .collect(Collectors.toMap(Account::getAccountNumber, a -> a));
 
         Date dt=new Date(System.currentTimeMillis());

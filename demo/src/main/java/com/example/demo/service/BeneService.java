@@ -5,6 +5,8 @@ import com.example.demo.model.*;
 import com.example.demo.repo.benerepo;
 import com.example.demo.util.EmailUtil;
 import com.example.demo.validator.BeneValidation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,9 +30,14 @@ public class BeneService {
 
     private Bene bene;
     private EmailUtil emailUtil;
+    private static final Logger log = LoggerFactory.getLogger(BeneService.class);
 
    public String insret(Bene bene) throws SQLException, IOException {
+
+       log.info("Beneficiary validation");
        beneValidation.submitRequestValidation(bene);
+
+       log.info("Submit validation success");
         String Status =benerepo.insert(bene);
         if(Status.equals("Success")){
             if (bene.getEmail() != null &&
@@ -38,6 +45,7 @@ public class BeneService {
                 String subject = "Beneficiary Created Successfully";
                 String body = emailUtil.CreatedTemplate(bene);
                 try {
+                    log.info("mail service started");
                     emailService.sendMail(bene.getEmail(), subject, body);
                 } catch (Exception e) {
                     System.out.println("Mail sending failed: " + e.getMessage());
@@ -60,10 +68,12 @@ public class BeneService {
     }
 
     public ListResponse list(ListRequest request) throws SQLException {
-       List response =benerepo.list(request);
+        List response =benerepo.list(request);
         ListResponse re = new ListResponse();
         re.setData(response);
         int total = response.size();
+
+        log.info("list size=>",total);
         if(!response.isEmpty()){
            re.setStatus("success");
            re.setTotal(total);
@@ -82,6 +92,7 @@ public class BeneService {
     public void amend(Amend request) throws SQLException {
         if(request.getBeneNicknName()!=null){
             beneValidation.amend(request);
+            log.info("amend validation success");
             benerepo.amend(request);
         }
       }
