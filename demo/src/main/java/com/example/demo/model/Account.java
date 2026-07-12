@@ -6,6 +6,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.sql.Date;
+
 @Data
 @JsonPropertyOrder({
         "id",
@@ -27,8 +29,8 @@ public class Account {
     private Double amount;
     private String bank;
     private String branch;
-
     @JsonProperty(defaultValue = "N")
     private String deleAcctFlag;
+    private Date lastupdated;
 
 }

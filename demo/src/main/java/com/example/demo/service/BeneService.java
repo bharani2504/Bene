@@ -82,7 +82,7 @@ public class BeneService {
     public void amend(Amend request) throws SQLException {
         if(request.getBeneNicknName()!=null){
             beneValidation.amend(request);
-
+            benerepo.amend(request);
         }
       }
 }

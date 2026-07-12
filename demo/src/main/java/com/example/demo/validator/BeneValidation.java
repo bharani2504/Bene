@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class BeneValidation {
@@ -112,7 +115,7 @@ public class BeneValidation {
     public void deleteValidator(DeleteRequest request) throws SQLException {
 
      Bene bene=benerepo.findone(request.getBeneNickName());
-     if(bene.getDelFlag().equals("Y")){
+     if(bene.getDelFlag()!= null && bene.getDelFlag().equals("Y")){
          applyError("Beneficiary is already marked as deleted");
      }
      request.setDelFlag("Y");
@@ -122,15 +125,37 @@ public class BeneValidation {
 
         Bene bn=benerepo.findone(request.getBeneNicknName());
 
+        if(bn.getDelFlag()!= null ){
+          if( bn.getDelFlag().equals("Y")){
+              applyError("Beneficiary is already deleted");
+          }
+        }
         if(bn==null){
-            applyError("BeneNickName is non amendable filed");
+            applyError("Beneficiary not found");
+        }
+        if(!bn.getBeneNicknName().equalsIgnoreCase(request.getBeneNicknName())){
+            applyError("Beneficiary nick name is non amendable");
         }
 
-        if(bn!=null){
+         List<Account> ac = bn.getAccount();
+          List<Account>amendAccount =request.getAccount();
 
+        Map<String, Account> existingMap = ac.stream()
+                .collect(Collectors.toMap(Account::getAccountNumber, a -> a));
 
+        Date dt=new Date(System.currentTimeMillis());
+        for(Account acc : amendAccount){
+            Account accc = existingMap.get(acc.getAccountNumber());
+
+            if(accc==null){
+                applyError("account number is non amendable filed");
+            }
+
+            acc.setLastupdated(dt);
         }
 
+        request.setLastupdated(dt);
+        request.setAccount(amendAccount);
 
     }
 }

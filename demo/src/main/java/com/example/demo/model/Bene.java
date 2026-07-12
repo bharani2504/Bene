@@ -7,6 +7,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.sql.Date;
 import java.util.List;
 
 @Data
@@ -33,6 +34,7 @@ public class Bene {
     @JsonProperty(defaultValue = "N")
     private String delFlag;
     private String remarks;
+    private Date lastupdated;
     private List<Account> account;
 
 }

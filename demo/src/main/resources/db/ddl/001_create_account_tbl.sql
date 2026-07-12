@@ -17,3 +17,9 @@ ALTER table account add column remarks VARCHAR(255);
 
 --changeset beneficiary:Bene_table-2026070901
 ALTER table bene add column remarks VARCHAR(255);
+
+--changeset beneficiary:Bene_table-2026071200
+ALTER table bene add column lastupdated TIMESTAMP(6);
+
+--changeset beneficiary:Bene_table-2026071201
+ALTER table account add column lastupdated TIMESTAMP(6);

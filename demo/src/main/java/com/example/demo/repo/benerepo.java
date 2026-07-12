@@ -1,7 +1,7 @@
 package com.example.demo.repo;
 
 import com.example.demo.model.*;
-import org.hibernate.sql.Delete;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -9,9 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class benerepo {
@@ -50,6 +48,9 @@ public class benerepo {
 
     String findone="Select * from bene where bene_nick_name=?";
     String accQuery = "SELECT * FROM account WHERE bene_id = ?";
+
+    String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=? where bene_nick_name=?";
+    String accupdate="Update account Set account_name=?,ifsc=?,amount=?,lastupdated=? where bene_id=?";
 
 
 
@@ -142,8 +143,8 @@ public class benerepo {
            int size=request.getPage().get(0).getSize();
 
            int pg=page*size;
-          String  value =request.getSort().get(0).getSortBy();
-          String sortOrder=request.getSort().get(0).getSort();
+           String  value =request.getSort().get(0).getSortBy();
+           String sortOrder=request.getSort().get(0).getSort();
            String selectAll = "SELECT * FROM bene ORDER BY " + value + " " + sortOrder + " LIMIT ?, ?";
 
 
@@ -155,8 +156,12 @@ public class benerepo {
                while (rs.next()){
                    String beneNickname=rs.getString("bene_nick_name");
                    Bene bene=findone(beneNickname);
-                   if(!bene.getDelFlag().equalsIgnoreCase("Y")){
-                    beneList.add(findone(beneNickname));
+                   if(bene.getDelFlag()!=null) {
+                       if (!bene.getDelFlag().equalsIgnoreCase("Y")) {
+                           beneList.add(bene);
+                       }
+                   }else{
+                   beneList.add(bene);
                    }
                }
            }
@@ -198,6 +203,41 @@ public class benerepo {
        return "Beneficiary Successfully marked as deleted";
    }
 
+       public String amend(Amend request) throws SQLException {
+
+        Connection con= DriverManager.getConnection(url,userName,password);
+        con.setAutoCommit(false);
+
+        try(PreparedStatement ps = con.prepareStatement(beneupdate)){
+            ps.setString(1,request.getBeneName());
+            ps.setString(2,request.getMobile());
+            ps.setString(3,request.getEmail());
+            ps.setDate(4, request.getLastupdated());
+            ps.setString(5,request.getBeneNicknName());
+            ps.executeUpdate();
+            Bene bn = findone(request.getBeneNicknName());
+
+            for( Account ac : request.getAccount()){
+                PreparedStatement as = con.prepareStatement(accupdate);
+                as.setString(1,ac.getAccountName());
+                as.setString(2,ac.getIFSC());
+                as.setDouble(3,ac.getAmount());
+                as.setDate(4, (Date) ac.getLastupdated());
+                as.setLong(5,bn.getBeneId());
+                int afffectedrows=  as.executeUpdate();
+            }
+            con.commit();
+            return "Updated Successfully";
+        }
+        catch(Exception e)
+        {
+            con.rollback();
+            return "Give the Fields correctly";
+        }
+        finally {
+            con.close();
+        }
+    }
 }
 
 
