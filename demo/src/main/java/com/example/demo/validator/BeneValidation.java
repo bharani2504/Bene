@@ -65,6 +65,7 @@ public class BeneValidation {
             }
 
             log.info("Bene ifsc validation");
+            bene.setCreatedDate(new Date(System.currentTimeMillis()));
             ifscValidation(bene);
             for(Account ac : bene.getAccount()){
                 if(ac.getAccountNumber()==null){

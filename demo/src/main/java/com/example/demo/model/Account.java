@@ -32,5 +32,6 @@ public class Account {
     @JsonProperty(defaultValue = "N")
     private String deleAcctFlag;
     private Date lastupdated;
+    private String accountType;
 
 }

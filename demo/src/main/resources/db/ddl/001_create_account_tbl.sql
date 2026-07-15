@@ -23,3 +23,9 @@ ALTER table bene add column lastupdated TIMESTAMP(6);
 
 --changeset beneficiary:Bene_table-2026071201
 ALTER table account add column lastupdated TIMESTAMP(6);
+
+--changeset beneficiary:Bene_table-2026071202
+ALTER table account add column accountType VARCHAR(50);
+
+--changeset beneficiary:Bene_table-2026071203
+ALTER table bene add column createdDate TIMESTAMP(6);

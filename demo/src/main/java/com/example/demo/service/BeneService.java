@@ -37,7 +37,7 @@ public class BeneService {
        log.info("Beneficiary validation");
        beneValidation.submitRequestValidation(bene);
 
-       log.info("Submit validation success");
+        log.info("Submit validation success");
         String Status =benerepo.insert(bene);
         if(Status.equals("Success")){
             if (bene.getEmail() != null &&

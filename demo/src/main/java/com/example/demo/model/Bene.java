@@ -35,6 +35,7 @@ public class Bene {
     private String delFlag;
     private String remarks;
     private Date lastupdated;
+    private Date createdDate;
     private List<Account> account;
 
 }

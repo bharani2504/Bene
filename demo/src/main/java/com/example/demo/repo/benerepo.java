@@ -32,7 +32,7 @@ public class benerepo {
     static final int INT_EMAIL=4;
     static final int INT_REFERENCE_ID=5;
     static final int INT_DEL_FLAG=6;
-
+    static final int INT_CREATED_DATE=7;
 
     static final int INT_BENE_ID=1;
     static final int INT_ACCOUNT_NAME=2;
@@ -42,19 +42,20 @@ public class benerepo {
     static final int INT_BANK=6;
     static final int INT_BRANCH=7;
     static final int INT_DEL_ACCT_FLAG=8;
+    static final int INT_ACCOUNT_TYPE=9;
 
     static final int GET_BENE_BY_NICK_NAME=1;
 
     private static final Logger log = LoggerFactory.getLogger(benerepo.class);
 
-    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag) values(?,?,?,?,?,?)";
-    String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag) values(?,?,?,?,?,?,?,?)";
+    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate) values(?,?,?,?,?,?,?)";
+    String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag,accountType) values(?,?,?,?,?,?,?,?,?)";
 
     String findone="Select * from bene where bene_nick_name=?";
     String accQuery = "SELECT * FROM account WHERE bene_id = ?";
 
     String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=? where bene_nick_name=?";
-    String accupdate="Update account Set account_name=?,ifsc=?,amount=?,lastupdated=? where bene_id=?";
+    String accupdate="Update account Set account_name=?,ifsc=?,amount=?,lastupdated=?,accountType=? where bene_id=?";
 
 
 
@@ -71,6 +72,7 @@ public class benerepo {
            ps.setString(INT_EMAIL,bene.getEmail());
            ps.setString(INT_REFERENCE_ID,bene.getReferenceId());
            ps.setString(INT_DEL_FLAG,bene.getDelFlag());
+           ps.setDate(INT_CREATED_DATE,bene.getCreatedDate());
            ps.executeUpdate();
 
            log.info("bene insert query",ps.executeUpdate());
@@ -88,6 +90,7 @@ public class benerepo {
                as.setDouble(INT_AMOUNT,ac.getAmount());
                as.setString(INT_BRANCH,ac.getBranch());
                as.setString(INT_DEL_ACCT_FLAG,ac.getDeleAcctFlag());
+               as.setString(INT_ACCOUNT_TYPE,ac.getAccountType());
                int affectedrows=  as.executeUpdate();
 
                log.info("account affected rows",affectedrows);
@@ -127,6 +130,7 @@ public class benerepo {
                    bene.setEmail(rs.getString("email"));
                    bene.setReferenceId(rs.getString("referenceId"));
                    bene.setDelFlag(rs.getString("delFlag"));
+                   bene.setCreatedDate(rs.getDate("createdDate"));
                    ps1.setLong(1,beneId);
                    ResultSet rs2=ps1.executeQuery();
 
@@ -140,6 +144,7 @@ public class benerepo {
                         account.setId(rs2.getLong("account_id"));
                         account.setBranch(rs2.getString("branch"));
                         account.setDeleAcctFlag(rs2.getString("delAccFlag"));
+                        account.setAccountType(rs2.getString("accountType"));
                         account.setBeneId(beneId);
                         accounts.add(account);
                    }
@@ -237,7 +242,8 @@ public class benerepo {
                 as.setString(2,ac.getIFSC());
                 as.setDouble(3,ac.getAmount());
                 as.setDate(4, (Date) ac.getLastupdated());
-                as.setLong(5,bn.getBeneId());
+                as.setString(5,ac.getAccountType());
+                as.setLong(6,bn.getBeneId());
                 int affectedrows=  as.executeUpdate();
             }
             con.commit();
