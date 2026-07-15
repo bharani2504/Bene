@@ -2,9 +2,8 @@ package com.example.demo.validator;
 
 import com.example.demo.exception.BeneficiaryException;
 import com.example.demo.model.*;
-import com.example.demo.repo.benerepo;
+import com.example.demo.repo.BeneRepo;
 import com.example.demo.service.CommonService;
-import org.hibernate.sql.Delete;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +27,7 @@ public class BeneValidation {
     private CommonService commonService;
 
     @Autowired
-    private benerepo benerepo ;
+    private BeneRepo benerepo ;
 
     private static final Logger log = LoggerFactory.getLogger(BeneValidation.class);
     public void submitRequestValidation (Bene bene) throws SQLException {

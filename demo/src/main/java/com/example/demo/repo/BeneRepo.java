@@ -1,7 +1,6 @@
 package com.example.demo.repo;
 
 import com.example.demo.model.*;
-import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class benerepo {
+public class BeneRepo {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -46,7 +45,7 @@ public class benerepo {
 
     static final int GET_BENE_BY_NICK_NAME=1;
 
-    private static final Logger log = LoggerFactory.getLogger(benerepo.class);
+    private static final Logger log = LoggerFactory.getLogger(BeneRepo.class);
 
     String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate) values(?,?,?,?,?,?,?)";
     String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag,accountType) values(?,?,?,?,?,?,?,?,?)";

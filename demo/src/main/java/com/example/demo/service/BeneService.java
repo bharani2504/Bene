@@ -2,7 +2,7 @@ package com.example.demo.service;
 
 
 import com.example.demo.model.*;
-import com.example.demo.repo.benerepo;
+import com.example.demo.repo.BeneRepo;
 import com.example.demo.util.EmailUtil;
 import com.example.demo.validator.BeneValidation;
 import org.slf4j.Logger;
@@ -20,7 +20,7 @@ import java.util.UUID;
 public class BeneService {
 
     @Autowired
-    private benerepo benerepo;
+    private BeneRepo benerepo;
 
     @Autowired
     private EmailService emailService;
