@@ -8,6 +8,7 @@ import com.example.demo.repo.BeneRepo;
 import com.example.demo.service.BeneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,30 +29,31 @@ public class BeneStatusUpdateJob {
     @Scheduled(cron = "${bene.status.update.cron}")
     public static void updatePendingBene() throws SQLException {
 
-       ListRequest request = new ListRequest();
-       List<Filter>filters=new ArrayList<>();
-       Filter filter = new Filter();
-       filter.setName("status");
-       filter.setValue("Pending");
-       filters.add(filter);
-       request.setFilters(filters);
-       request.setFetchChild(true);
-        List<Amend> bn=beneRepo.list(request);
-        Date dt=new Date(System.currentTimeMillis());
-        int updatedCount =0;
+        ListRequest request = new ListRequest();
+        List<Filter> filters = new ArrayList<>();
+        Filter filter = new Filter();
+        filter.setName("status");
+        filter.setValue("Pending");
+        filters.add(filter);
+        request.setFilters(filters);
+        request.setFetchChild(true);
+        List<Bene> bn = beneRepo.list(request);
+        Date dt = new Date(System.currentTimeMillis());
+        int updatedCount = 0;
 
-        if(bn!=null) {
-           for (Amend bene : bn) {
-               bene.setStatus("Approved");
-               bene.setLastupdated(dt);
-               beneRepo.amend(bene);
-               updatedCount++;
-           }
-       }
-        else{
+        if (!bn.isEmpty()) {
+            for (Bene bene : bn) {
+                Amend amend = new Amend();
+                BeanUtils.copyProperties(bene, amend);
+                amend.setStatus("Approved");
+                amend.setLastupdated(dt);
+                beneRepo.amend(amend);
+                updatedCount++;
+            }
+            log.info("BeneStatusUpdateJob completed, updated {} records", updatedCount);
+        } else {
             log.info("no records to update");
         }
-        log.info("BeneStatusUpdateJob completed, updated {} records", updatedCount);
-  }
-
+    }
 }
+

@@ -245,8 +245,8 @@ public class BeneRepo {
             ps.setString(2,request.getMobile());
             ps.setString(3,request.getEmail());
             ps.setDate(4, request.getLastupdated());
-            ps.setString(5,request.getBeneNicknName());
-            ps.setString(6,request.getStatus());
+            ps.setString(5,request.getStatus());
+            ps.setString(6,request.getBeneNicknName());
             ps.executeUpdate();
             Bene bn = findone(request.getBeneNicknName());
 

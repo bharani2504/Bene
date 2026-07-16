@@ -96,7 +96,7 @@ public class BeneValidation {
 
                        serviceRequest.setContext(req);
                        serviceRequest.setRefenceID(bene.getReferenceId());
-                       log.info("service request=>",serviceRequest);
+                       log.info("service request => {}", serviceRequest);
 
                        ServiceResponse response=commonService.getIfsc(serviceRequest);
                        Map<String,Object>data=response.getData();

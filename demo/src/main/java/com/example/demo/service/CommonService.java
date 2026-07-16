@@ -40,7 +40,7 @@ public class CommonService {
             response.setData(resp);
             response.setStatus("SUCCESS");
             response.setResponseString(resp.toString());
-            log.info("service response =>",response);
+            log.info("service response =>{}",response);
 
         }
 
