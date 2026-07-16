@@ -32,6 +32,7 @@ public class BeneRepo {
     static final int INT_REFERENCE_ID=5;
     static final int INT_DEL_FLAG=6;
     static final int INT_CREATED_DATE=7;
+    static final int INT_STATUS=8;
 
     static final int INT_BENE_ID=1;
     static final int INT_ACCOUNT_NAME=2;
@@ -47,13 +48,13 @@ public class BeneRepo {
 
     private static final Logger log = LoggerFactory.getLogger(BeneRepo.class);
 
-    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate) values(?,?,?,?,?,?,?)";
+    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate,status) values(?,?,?,?,?,?,?,?)";
     String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag,accountType) values(?,?,?,?,?,?,?,?,?)";
 
     String findone="Select * from bene where bene_nick_name=?";
     String accQuery = "SELECT * FROM account WHERE bene_id = ?";
 
-    String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=? where bene_nick_name=?";
+    String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=?,status=? where bene_nick_name=?";
     String accupdate="Update account Set account_name=?,ifsc=?,amount=?,lastupdated=?,accountType=? where bene_id=?";
 
 
@@ -72,9 +73,9 @@ public class BeneRepo {
            ps.setString(INT_REFERENCE_ID,bene.getReferenceId());
            ps.setString(INT_DEL_FLAG,bene.getDelFlag());
            ps.setDate(INT_CREATED_DATE,bene.getCreatedDate());
+           ps.setString(INT_STATUS,bene.getStatus());
            ps.executeUpdate();
 
-           log.info("bene insert query",ps.executeUpdate());
            ResultSet re = ps.getGeneratedKeys();
            re.next();
            int total = re.getInt(INT_BENE_ID);
@@ -130,6 +131,7 @@ public class BeneRepo {
                    bene.setReferenceId(rs.getString("referenceId"));
                    bene.setDelFlag(rs.getString("delFlag"));
                    bene.setCreatedDate(rs.getDate("createdDate"));
+                   bene.setStatus(rs.getString("status"));
                    ps1.setLong(1,beneId);
                    ResultSet rs2=ps1.executeQuery();
 
@@ -157,18 +159,30 @@ public class BeneRepo {
        List<Bene>beneList=new ArrayList<>();
        if(request.isFetchChild()){
            Connection con = DriverManager.getConnection(url, userName, password);
-           int page =request.getPage().get(0).getPage();
-           int size=request.getPage().get(0).getSize();
 
-           int pg=page*size;
-           String  value =request.getSort().get(0).getSortBy();
-           String sortOrder=request.getSort().get(0).getSort();
-           String selectAll = "SELECT * FROM bene ORDER BY " + value + " " + sortOrder + " LIMIT ?, ?";
+           int pg=0;
+           int size=0;
+           String selectAll="";
+           if(request.getSort()!=null && request.getPage()!=null){
+               int page =request.getPage().get(0).getPage();
+               size=request.getPage().get(0).getSize();
+               pg=page*size;
+               String  value =request.getSort().get(0).getSortBy();
+               String sortOrder=request.getSort().get(0).getSort();
+            selectAll = "SELECT * FROM bene ORDER BY " + value + " " + sortOrder + " LIMIT ?, ?";
+           }
+           else{
+               String name = request.getFilters().get(0).getName();
+               String filedValue= request.getFilters().get(0).getValue();
+               selectAll = "SELECT * FROM bene WHERE " + name + " = '" + filedValue + "'";
+           }
 
 
            try (PreparedStatement ps = con.prepareStatement(selectAll)){
-               ps.setInt(1,pg);
-               ps.setInt(2,size);
+               if(request.getSort()!=null && request.getPage()!=null) {
+                   ps.setInt(1, pg);
+                   ps.setInt(2, size);
+               }
                ResultSet rs = ps.executeQuery();
                while (rs.next()){
                    String beneNickname=rs.getString("bene_nick_name");
@@ -232,18 +246,21 @@ public class BeneRepo {
             ps.setString(3,request.getEmail());
             ps.setDate(4, request.getLastupdated());
             ps.setString(5,request.getBeneNicknName());
+            ps.setString(6,request.getStatus());
             ps.executeUpdate();
             Bene bn = findone(request.getBeneNicknName());
 
-            for( Account ac : request.getAccount()){
-                PreparedStatement as = con.prepareStatement(accupdate);
-                as.setString(1,ac.getAccountName());
-                as.setString(2,ac.getIFSC());
-                as.setDouble(3,ac.getAmount());
-                as.setDate(4, (Date) ac.getLastupdated());
-                as.setString(5,ac.getAccountType());
-                as.setLong(6,bn.getBeneId());
-                int affectedrows=  as.executeUpdate();
+            if(request.getAccount()!=null) {
+                for (Account ac : request.getAccount()) {
+                    PreparedStatement as = con.prepareStatement(accupdate);
+                    as.setString(1, ac.getAccountName());
+                    as.setString(2, ac.getIFSC());
+                    as.setDouble(3, ac.getAmount());
+                    as.setDate(4, (Date) ac.getLastupdated());
+                    as.setString(5, ac.getAccountType());
+                    as.setLong(6, bn.getBeneId());
+                    int affectedrows = as.executeUpdate();
+                }
             }
             con.commit();
 

@@ -63,6 +63,8 @@ public class BeneValidation {
                 }
             }
 
+            bene.setDelFlag("N");
+            bene.setStatus("Pending");
             log.info("Bene ifsc validation");
             bene.setCreatedDate(new Date(System.currentTimeMillis()));
             ifscValidation(bene);

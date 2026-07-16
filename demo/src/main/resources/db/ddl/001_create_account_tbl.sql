@@ -29,3 +29,6 @@ ALTER table account add column accountType VARCHAR(50);
 
 --changeset beneficiary:Bene_table-2026071203
 ALTER table bene add column createdDate TIMESTAMP(6);
+
+--changeset beneficiary:Bene_table-2026071600
+ALTER table bene add column status VARCHAR(50);

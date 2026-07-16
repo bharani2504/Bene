@@ -27,15 +27,27 @@ public class Bene {
     private long beneId;
 
     private String beneName;
+
     private String beneNicknName;
+
     private String mobile;
+
     private String email;
+
     private String referenceId;
+
     @JsonProperty(defaultValue = "N")
     private String delFlag;
+
     private String remarks;
+
     private Date lastupdated;
+
     private Date createdDate;
+
+    @JsonProperty(defaultValue = "Pending")
+    private String status;
+
     private List<Account> account;
 
 }
