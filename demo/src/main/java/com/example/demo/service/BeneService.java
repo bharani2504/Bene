@@ -15,6 +15,7 @@ import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class BeneService {
@@ -46,7 +47,9 @@ public class BeneService {
                 String body = emailUtil.CreatedTemplate(bene);
                 try {
                     log.info("mail service started");
-                    emailService.sendMail(bene.getEmail(), subject, body);
+                    CompletableFuture.runAsync(() -> {
+                        emailService.sendMail(bene.getEmail(), subject, body);
+                    });
                 } catch (Exception e) {
                     System.out.println("Mail sending failed: " + e.getMessage());
                 }
