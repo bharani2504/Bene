@@ -1,11 +1,10 @@
 package com.example.demo.job;
 
-import com.example.demo.model.Amend;
-import com.example.demo.model.Bene;
-import com.example.demo.model.Filter;
-import com.example.demo.model.ListRequest;
+import com.example.demo.dto.Amend;
+import com.example.demo.dto.Bene;
+import com.example.demo.dto.Filter;
+import com.example.demo.dto.ListRequest;
 import com.example.demo.repo.BeneRepo;
-import com.example.demo.service.BeneService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

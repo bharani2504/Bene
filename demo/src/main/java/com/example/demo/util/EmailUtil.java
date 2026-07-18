@@ -1,6 +1,6 @@
 package com.example.demo.util;
 
-import com.example.demo.model.Bene;
+import com.example.demo.dto.Bene;
 
 public class EmailUtil {
 

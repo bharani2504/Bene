@@ -1,7 +1,7 @@
 package com.example.demo.service;
 
 
-import com.example.demo.model.*;
+import com.example.demo.dto.*;
 import com.example.demo.repo.BeneRepo;
 import com.example.demo.util.EmailUtil;
 import com.example.demo.validator.BeneValidation;

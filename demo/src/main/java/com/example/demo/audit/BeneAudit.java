@@ -1,11 +1,9 @@
 package com.example.demo.audit;
 import com.example.demo.annotation.AuditLog;
-import com.example.demo.exception.BeneficiaryException;
-import com.example.demo.model.Audit;
-import com.example.demo.model.ServiceRequest;
-import com.example.demo.model.ServiceResponse;
+import com.example.demo.dto.Audit;
+import com.example.demo.dto.ServiceRequest;
+import com.example.demo.dto.ServiceResponse;
 import com.example.demo.service.BeneAuditService;
-import com.example.demo.service.CommonService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;

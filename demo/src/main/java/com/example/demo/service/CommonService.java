@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
 import com.example.demo.annotation.AuditLog;
-import com.example.demo.model.ServiceRequest;
-import com.example.demo.model.ServiceResponse;
+import com.example.demo.dto.ServiceRequest;
+import com.example.demo.dto.ServiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

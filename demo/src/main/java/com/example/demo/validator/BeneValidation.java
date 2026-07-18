@@ -1,7 +1,7 @@
 package com.example.demo.validator;
 
 import com.example.demo.exception.BeneficiaryException;
-import com.example.demo.model.*;
+import com.example.demo.dto.*;
 import com.example.demo.repo.BeneRepo;
 import com.example.demo.service.CommonService;
 import org.slf4j.Logger;

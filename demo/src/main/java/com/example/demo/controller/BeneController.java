@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.*;
+import com.example.demo.dto.*;
 import com.example.demo.service.BeneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
