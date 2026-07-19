@@ -7,9 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class MigrationRequest {
 
-    @JsonProperty("file")
     private MultipartFile file;
-
-    @JsonProperty("schedule")
-    private String schedule;
+    private String cron;
 }

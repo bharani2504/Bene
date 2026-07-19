@@ -33,6 +33,7 @@ public class BeneRepo {
     static final int INT_DEL_FLAG=6;
     static final int INT_CREATED_DATE=7;
     static final int INT_STATUS=8;
+    static final int INT_MIGRATION_STATUS=9;
 
     static final int INT_BENE_ID=1;
     static final int INT_ACCOUNT_NAME=2;
@@ -48,7 +49,7 @@ public class BeneRepo {
 
     private static final Logger log = LoggerFactory.getLogger(BeneRepo.class);
 
-    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate,status) values(?,?,?,?,?,?,?,?)";
+    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate,status,migration_status) values(?,?,?,?,?,?,?,?,?)";
     String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag,accountType) values(?,?,?,?,?,?,?,?,?)";
 
     String findone="Select * from bene where bene_nick_name=?";
@@ -74,6 +75,7 @@ public class BeneRepo {
            ps.setString(INT_DEL_FLAG,bene.getDelFlag());
            ps.setDate(INT_CREATED_DATE,bene.getCreatedDate());
            ps.setString(INT_STATUS,bene.getStatus());
+           ps.setString(INT_MIGRATION_STATUS,bene.getMigrationStatus());
            ps.executeUpdate();
 
            ResultSet re = ps.getGeneratedKeys();

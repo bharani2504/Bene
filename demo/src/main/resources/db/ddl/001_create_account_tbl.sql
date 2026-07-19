@@ -32,3 +32,6 @@ ALTER table bene add column createdDate TIMESTAMP(6);
 
 --changeset beneficiary:Bene_table-2026071600
 ALTER table bene add column status VARCHAR(50);
+
+--changeset beneficiary:Bene_table-2026071900
+ALTER table bene add column migration_status VARCHAR(50);

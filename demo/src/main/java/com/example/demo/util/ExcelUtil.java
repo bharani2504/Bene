@@ -13,30 +13,33 @@ import java.util.Map;
 
 public class ExcelUtil {
 
-    public static void readExcel(Workbook workbook){
+    public static List<Bene> readExcel(Workbook workbook){
 
         Sheet beneSheet = workbook.getSheet("Beneficiary");
         Sheet accSheet=workbook.getSheet("Account");
 
-        Bene bene= new Bene();
+
         Map<Long,Bene> beneMap=new LinkedHashMap<>();
         List<Bene> beneList=new ArrayList<>();
          for(Row row: beneSheet){
+             Bene bene= new Bene();
            if (row.getRowNum() == 0) {
                continue;
            }
-           bene.setBeneId(Long.parseLong(row.getCell(0).getStringCellValue()));
+           bene.setBeneId((long) row.getCell(0).getNumericCellValue());
            bene.setBeneName(row.getCell(1).getStringCellValue());
            bene.setBeneNicknName(row.getCell(2).getStringCellValue());
            bene.setEmail(row.getCell(3).getStringCellValue());
            bene.setMobile(row.getCell(4).getStringCellValue());
+           bene.setStatus("Approved");
+           bene.setMigrationStatus("M");
            beneMap.put(bene.getBeneId(),bene);
        }
 
         for (Row row : accSheet) {
             if (row.getRowNum() == 0) continue;
 
-            Long beneId = Long.parseLong(row.getCell(0).getStringCellValue());
+            Long beneId = (long) row.getCell(0).getNumericCellValue();
             List<Account> accounts= new ArrayList<>();
             Account act = new Account();
             act.setBeneId(beneId);
@@ -52,5 +55,7 @@ public class ExcelUtil {
                 beneList.add(bn);
             }
         }
+
+        return beneList;
     }
 }

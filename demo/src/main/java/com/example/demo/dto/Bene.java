@@ -47,6 +47,8 @@ public class Bene {
     @JsonProperty(defaultValue = "Pending")
     private String status;
 
+    private String migrationStatus;
+
     private List<Account> account;
 
 }

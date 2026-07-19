@@ -4,7 +4,9 @@ import com.example.demo.dto.MigrationRequest;
 import com.example.demo.service.MigrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class BeneMigration {
 
     @Autowired
-    private static MigrationService migrationService;
+    private  MigrationService migrationService;
 
-    @PostMapping("migration/submit")
-    public ResponseEntity<String> submit (@RequestBody MigrationRequest request){
-        migrationService.process(request);
+    @PostMapping(value = "migration/submit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> submit (@ModelAttribute MigrationRequest request){
+        migrationService.schedule(request);
         return new ResponseEntity<>("Migration is scheduled",HttpStatus.OK);
     }
 }
