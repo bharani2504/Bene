@@ -1,6 +1,6 @@
 package com.example.demo.audit;
 import com.example.demo.annotation.AuditLog;
-import com.example.demo.dto.Audit;
+import com.example.demo.entity.Audit;
 import com.example.demo.dto.ServiceRequest;
 import com.example.demo.dto.ServiceResponse;
 import com.example.demo.service.BeneAuditService;

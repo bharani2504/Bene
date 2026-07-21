@@ -1,5 +1,7 @@
 package com.example.demo.job;
 
+import com.example.demo.entity.Migration;
+import com.example.demo.repo.BeneMigrationRepo;
 import com.example.demo.service.MigrationService;
 import org.quartz.*;
 import org.slf4j.Logger;
@@ -7,12 +9,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 public class MigrationJob implements Job {
 
 
     @Autowired
     private MigrationService migrationService;
+
     public  static  final Logger log = LoggerFactory.getLogger(MigrationJob.class);
 
     @Override
@@ -20,9 +25,9 @@ public class MigrationJob implements Job {
 
         try {
             JobDataMap dataMap = context.getMergedJobDataMap();
-            String filePath = dataMap.getString("filepath");
+            Long id =dataMap.getLong("migrationId");
             log.info("Migration Started");
-            migrationService.process(filePath);
+            migrationService.process(id);
             log.info("Migration Completed");
         }
         finally {

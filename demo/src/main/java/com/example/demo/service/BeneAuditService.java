@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.dto.Audit;
+import com.example.demo.entity.Audit;
 import com.example.demo.repo.BeneAuditRepo;
 import org.springframework.stereotype.Service;
 

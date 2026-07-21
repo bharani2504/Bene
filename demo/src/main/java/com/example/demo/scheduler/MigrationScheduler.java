@@ -14,12 +14,12 @@ public class MigrationScheduler {
     @Autowired
     private Scheduler scheduler;
 
-    public void scheduleMigration(String filepath ,String cron)  {
+    public void scheduleMigration(Long id ,String cron)  {
 
         try {
             JobDetail jobDetail = JobBuilder.newJob(MigrationJob.class)
                     .withIdentity(UUID.randomUUID().toString())
-                    .usingJobData("filepath", filepath)
+                    .usingJobData("migrationId", id)
                     .build();
 
             Trigger trigger = TriggerBuilder.newTrigger()
