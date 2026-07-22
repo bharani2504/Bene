@@ -35,3 +35,7 @@ ALTER table bene add column status VARCHAR(50);
 
 --changeset beneficiary:Bene_table-2026071900
 ALTER table bene add column migration_status VARCHAR(50);
+
+--changeset beneficiary:Bene_table-2026072200
+ALTER TABLE bene DROP INDEX bene_nick_name;
+ALTER TABLE bene MODIFY COLUMN bene_nick_name VARCHAR(100) NOT NULL;

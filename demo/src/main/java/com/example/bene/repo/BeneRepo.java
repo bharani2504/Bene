@@ -105,7 +105,7 @@ public class BeneRepo {
        {
            con.rollback();
            log.warn("exception occured",e);
-           return "Give the Fields correctly";
+           return "Failed";
        }
        finally {
            con.close();
@@ -231,7 +231,7 @@ public class BeneRepo {
         {
             con.rollback();
             log.warn("exception occured",e);
-            return "Can't able to delete";
+            return "Failed to delete";
         }
         log.info("Beneficiary deleted");
        return "Beneficiary Successfully marked as deleted";
@@ -273,7 +273,7 @@ public class BeneRepo {
         {
             con.rollback();
             log.warn("exception=>",e);
-            return "Give the Fields correctly";
+            return "Failed to update";
         }
         finally {
             con.close();

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -33,14 +34,14 @@ public class BeneService {
     private EmailUtil emailUtil;
     private static final Logger log = LoggerFactory.getLogger(BeneService.class);
 
-   public String insret(Bene bene) throws SQLException, IOException {
-
+   public BeneSubmitResponse insret(Bene bene) throws SQLException, IOException {
+       BeneSubmitResponse response = new BeneSubmitResponse();
        log.info("Beneficiary validation");
        beneValidation.submitRequestValidation(bene);
 
         log.info("Submit validation success");
-        String Status =benerepo.insert(bene);
-        if(Status.equals("Success")){
+        String status =benerepo.insert(bene);
+        if(status.equals("Success")){
             if (bene.getEmail() != null &&
                     bene.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
                 String subject = "Beneficiary Created Successfully";
@@ -55,7 +56,10 @@ public class BeneService {
                 }
             }
         }
-       return Status;
+        response.setStatus(status);
+        response.setBeneNickName(bene.getBeneNicknName());
+        response.setCreatedDate(new Date(System.currentTimeMillis()));
+       return response;
    }
 
     public Bene find (String beneNicknName) throws SQLException {
@@ -63,11 +67,18 @@ public class BeneService {
              return bene;
     }
 
-    public void delete(DeleteRequest request) throws SQLException {
+    public  BeneDeletedResponse delete(DeleteRequest request) throws SQLException {
+       BeneDeletedResponse response = new BeneDeletedResponse();
+       String status="";
        if(request.getBeneNickName()!=null) {
            beneValidation.deleteValidator(request);
-           benerepo.Delete(request);
+           status= benerepo.Delete(request);
        }
+       response.setStatus(status);
+       response.setBeneNickName(request.getBeneNickName());
+       response.setDeletedAt(new Date(System.currentTimeMillis()));
+
+       return response;
     }
 
     public ListResponse list(ListRequest request) throws SQLException {
@@ -92,11 +103,17 @@ public class BeneService {
         return "REF" + number.substring(0, 15);
     }
 
-    public void amend(Amend request) throws SQLException {
-        if(request.getBeneNicknName()!=null){
+    public AmendBeneResponse amend(Amend request) throws SQLException {
+       AmendBeneResponse response = new AmendBeneResponse();
+       String status="";
+       if(request.getBeneNicknName()!=null){
             beneValidation.amend(request);
             log.info("amend validation success");
-            benerepo.amend(request);
+            status= benerepo.amend(request);
         }
+       response.setStatus(status);
+       response.setBeneNickName(request.getBeneNicknName());
+       response.setLastUpdatedat(new Date(System.currentTimeMillis()));
+       return response;
       }
 }

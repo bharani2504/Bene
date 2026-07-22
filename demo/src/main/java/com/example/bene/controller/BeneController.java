@@ -21,10 +21,10 @@ public class BeneController {
     private BeneService beneService;
 
     @PostMapping("/submit")
-    public ResponseEntity<String> Submit(@RequestBody Bene bene) throws SQLException, IOException {
+    public ResponseEntity<BeneSubmitResponse> Submit(@RequestBody Bene bene) throws SQLException, IOException {
         String referenceId=beneService.referenceId();
         bene.setReferenceId(referenceId);
-        String response=beneService.insret(bene);
+        BeneSubmitResponse response=beneService.insret(bene);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -35,9 +35,9 @@ public class BeneController {
     }
 
     @PostMapping("/delete")
-    public ResponseEntity<String> delete(@RequestBody DeleteRequest request) throws SQLException {
-         beneService.delete(request);
-        return new ResponseEntity<>("Successfully deleted",HttpStatus.OK);
+    public ResponseEntity<BeneDeletedResponse> delete(@RequestBody DeleteRequest request) throws SQLException {
+        BeneDeletedResponse response=beneService.delete(request);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @PostMapping("/list")
@@ -47,8 +47,8 @@ public class BeneController {
     }
 
     @PostMapping("/amend")
-    public ResponseEntity<String> amend(@RequestBody Amend request) throws SQLException {
-        beneService.amend(request);
-        return new ResponseEntity<>("Updated Successfully",HttpStatus.OK);
+    public ResponseEntity<AmendBeneResponse> amend(@RequestBody Amend request) throws SQLException {
+        AmendBeneResponse response=  beneService.amend(request);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }
