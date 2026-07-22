@@ -63,6 +63,130 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "http://localhost:8081/bene/list",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"fetchChild\":true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/bene/list",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "bene",
+            "list"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8081/bene/delete",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"beneNickName\":\"mbg\",\r\n    \"remarks\":\"currently no need\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/bene/delete",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "bene",
+            "delete"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8081/migration/submit",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "uuid": "31978c5e-c379-4d2e-aec2-bc56c36cf7e1",
+              "src": "/C:/Users/bhara/Downloads/Beneficiary_Account_Two_Sheets_New_5_Records.xlsx"
+            },
+            {
+              "key": "cron",
+              "value": "0 4 8 * * ?",
+              "type": "text",
+              "uuid": "896200ac-b189-4d4d-9f63-d8e9f78120d5"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:8081/migration/submit",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "migration",
+            "submit"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:8081/bene/amend",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"beneName\" : \"yudhiiibh\",\r\n  \"beneNicknName\": \"mbg\",\r\n  \"email\": \"vj25@gmail.com\",\r\n  \"mobile\" : 9677700227,\r\n  \"account\" : [  \r\n  {    \r\n    \"bank\":\"KKBK\",\r\n    \"amount\" : 1000,\r\n    \"accountNumber\" : \"120858100\",\r\n    \"IFSC\" : \"ICIC0000123\",\r\n    \"accountName\":\"vjn\"\r\n  } ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/bene/amend",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "bene",
+            "amend"
+          ]
+        }
+      },
+      "response": []
     }
   ]
 }
