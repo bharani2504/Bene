@@ -35,27 +35,3 @@ ALTER table bene add column status VARCHAR(50);
 
 --changeset beneficiary:Bene_table-2026071900
 ALTER table bene add column migration_status VARCHAR(50);
-
-
--- CREATE TABLE bene (
---                       bene_id BIGINT AUTO_INCREMENT PRIMARY KEY,
---                       bene_name VARCHAR(100) NOT NULL,
---                       bene_nick_name VARCHAR(15) NOT NULL UNIQUE,
---                       mobile VARCHAR(15),
---                       email VARCHAR(100)
--- );
-
-
-
--- CREATE TABLE account (
---                          account_id BIGINT AUTO_INCREMENT PRIMARY KEY,
---                          bene_id BIGINT NOT NULL,
---                          account_name varchar(100) NOT NULL,
---                          account_number VARCHAR(20) NOT NULL UNIQUE,
---                          ifsc VARCHAR(30) ,
---                          amount double,
---                          bank varchar(100) NOT NULL,
---                          CONSTRAINT fk_bene
---                              FOREIGN KEY (bene_id)
---                                  REFERENCES bene(bene_id)
--- );
