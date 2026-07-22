@@ -5,13 +5,19 @@ import com.example.demo.dto.Bene;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 public class ExcelUtil {
+
+    private static Logger log = LoggerFactory.getLogger(ExcelUtil.class);
+
 
     public static List<Bene> readExcel(Workbook workbook){
 
@@ -33,8 +39,11 @@ public class ExcelUtil {
            bene.setMobile(row.getCell(4).getStringCellValue());
            bene.setStatus("Approved");
            bene.setMigrationStatus("M");
+           bene.setDelFlag("N");
+           bene.setCreatedDate(new Date(System.currentTimeMillis()));
            beneMap.put(bene.getBeneId(),bene);
        }
+         log.info("Bene Size => {}",beneMap.size());
 
         for (Row row : accSheet) {
             if (row.getRowNum() == 0) continue;

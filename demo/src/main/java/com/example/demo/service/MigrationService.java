@@ -10,9 +10,10 @@ import com.example.demo.util.ExcelUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @Service
 public class MigrationService {
 
+    private  static Logger log = LoggerFactory.getLogger(MigrationService.class);
 
     @Autowired
     private  MigrationScheduler migrationScheduler;
@@ -56,6 +58,7 @@ public class MigrationService {
                     throw new RuntimeException(e);
                 }
             }
+            log.info("migration request => {}",migration);
             beneMigrationRepo.save(migration);
             migrationScheduler.scheduleMigration(migration.getId(), cron);
         }
@@ -90,8 +93,12 @@ public class MigrationService {
                         throw new RuntimeException(e);
                     }
                  }
+                 log.info("Sucessfullly migrated =>{}",success,"records");
                  migrate.setSuccessRecords(success);
-                 migrate.setFailedRecords(success);
+
+
+                 log.info("Failed migrated =>{}",failed,"records");
+                 migrate.setFailedRecords(failed);
              }
              migrate.setCompletedTime(new Date(System.currentTimeMillis()));
              beneMigrationRepo.save(migrate);
