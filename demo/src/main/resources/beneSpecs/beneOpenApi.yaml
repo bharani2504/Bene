@@ -1,0 +1,118 @@
+openapi: 3.0.3
+
+info:
+  title: Beneficiary API
+  version: 1.0.0
+  description: API for Beneficiary Submission
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /beneficiary:
+    post:
+      summary: Submit Beneficiary
+      operationId: submitBeneficiary
+      tags:
+        - Beneficiary
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BeneficiaryRequest'
+
+      responses:
+        '201':
+          description: Beneficiary submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryResponse'
+
+        '400':
+          description: Invalid Request
+
+        '500':
+          description: Internal Server Error
+
+components:
+  schemas:
+
+    BeneficiaryRequest:
+      type: object
+      required:
+        - beneName
+        - beneNicknName
+        - email
+        - mobile
+        - account
+      properties:
+        beneName:
+          type: string
+          example: yudhika
+
+        beneNicknName:
+          type: string
+          example: yb
+
+        email:
+          type: string
+          format: email
+          example: vj25@gmail.com
+
+        mobile:
+          type: integer
+          format: int64
+          example: 96777012227
+
+        account:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountRequest'
+
+    AccountRequest:
+      type: object
+      required:
+        - bank
+        - amount
+        - accountNumber
+        - IFSC
+        - accountName
+      properties:
+        bank:
+          type: string
+          example: KKBK
+
+        amount:
+          type: number
+          format: double
+          example: 5000
+
+        accountNumber:
+          type: string
+          example: "05212088310503"
+
+        IFSC:
+          type: string
+          example: ICIC0000123
+
+        accountName:
+          type: string
+          example: vjn
+
+    BeneficiaryResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Beneficiary submitted successfully
+
+        referenceId:
+          type: string
+          example: BENE123456
+
+        status:
+          type: string
+          example: SUCCESS
