@@ -1,118 +1,452 @@
-openapi: 3.0.3
+  openapi: 3.0.3
 
-info:
-  title: Beneficiary API
-  version: 1.0.0
-  description: API for Beneficiary Submission
+  info:
+    title: Beneficiary API
+    version: 1.0.0
+    description: API for Beneficiary Management
 
-servers:
-  - url: http://localhost:8080
+  servers:
+    - url: http://localhost:8080
 
-paths:
-  /beneficiary:
-    post:
-      summary: Submit Beneficiary
-      operationId: submitBeneficiary
-      tags:
-        - Beneficiary
+  paths:
 
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BeneficiaryRequest'
+    /bene/submit:
+      post:
+        summary: Submit Beneficiary
+        operationId: submitBeneficiary
+        tags:
+          - Beneficiary
 
-      responses:
-        '201':
-          description: Beneficiary submitted successfully
+        requestBody:
+          required: true
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BeneficiaryResponse'
+                $ref: '#/components/schemas/BeneficiaryRequest'
 
-        '400':
-          description: Invalid Request
+        responses:
+          '201':
+            description: Beneficiary submitted successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BeneSubmitResponse'
+          '400':
+            description: Invalid Request
+          '500':
+            description: Internal Server Error
 
-        '500':
-          description: Internal Server Error
+    /bene/amend:
+      post:
+        summary: Amend Beneficiary
+        operationId: amendBeneficiary
+        tags:
+          - Beneficiary
 
-components:
-  schemas:
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneficiaryRequest'
 
-    BeneficiaryRequest:
-      type: object
-      required:
-        - beneName
-        - beneNicknName
-        - email
-        - mobile
-        - account
-      properties:
-        beneName:
-          type: string
-          example: yudhika
+        responses:
+          '201':
+            description: Beneficiary amended successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/AmendBeneResponse'
+          '400':
+            description: Invalid Request
+          '500':
+            description: Internal Server Error
 
-        beneNicknName:
-          type: string
-          example: yb
+    /bene/detail:
+      post:
+        summary: Get Beneficiary Details
+        operationId: getBeneficiaryDetails
+        tags:
+          - Beneficiary
 
-        email:
-          type: string
-          format: email
-          example: vj25@gmail.com
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BeneDetailRequest'
 
-        mobile:
-          type: integer
-          format: int64
-          example: 96777012227
+        responses:
+          '200':
+            description: Beneficiary details fetched successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Bene'
+          '400':
+            description: Invalid Request
+          '404':
+            description: Beneficiary Not Found
+          '500':
+            description: Internal Server Error
 
-        account:
-          type: array
-          items:
-            $ref: '#/components/schemas/AccountRequest'
+    /bene/list:
+      post:
+        summary: List Beneficiaries
+        operationId: listBeneficiaries
+        tags:
+          - Beneficiary
 
-    AccountRequest:
-      type: object
-      required:
-        - bank
-        - amount
-        - accountNumber
-        - IFSC
-        - accountName
-      properties:
-        bank:
-          type: string
-          example: KKBK
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListRequest'
 
-        amount:
-          type: number
-          format: double
-          example: 5000
+        responses:
+          '200':
+            description: Beneficiary list fetched successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/ListResponse'
+          '400':
+            description: Invalid Request
+          '500':
+            description: Internal Server Error
 
-        accountNumber:
-          type: string
-          example: "05212088310503"
+    /bene/delete:
+      post:
+        summary: Delete Beneficiary
+        operationId: deleteBeneficiary
+        tags:
+          - Beneficiary
 
-        IFSC:
-          type: string
-          example: ICIC0000123
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteRequest'
 
-        accountName:
-          type: string
-          example: vjn
+        responses:
+          '200':
+            description: Beneficiary deleted successfully
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/BeneDeletedResponse'
+          '400':
+            description: Invalid Request
+          '404':
+            description: Beneficiary Not Found
+          '500':
+            description: Internal Server Error
 
-    BeneficiaryResponse:
-      type: object
-      properties:
-        message:
-          type: string
-          example: Beneficiary submitted successfully
+  components:
+    schemas:
 
-        referenceId:
-          type: string
-          example: BENE123456
+      BeneficiaryRequest:
+        type: object
+        required:
+          - beneName
+          - beneNicknName
+          - email
+          - mobile
+          - account
+        properties:
+          beneName:
+            type: string
+            example: yudhika
 
-        status:
-          type: string
-          example: SUCCESS
+          beneNicknName:
+            type: string
+            example: yb
+
+          email:
+            type: string
+            format: email
+            example: vj25@gmail.com
+
+          mobile:
+            type: integer
+            format: int64
+            example: 9677701227
+
+          account:
+            type: array
+            items:
+              $ref: '#/components/schemas/AccountRequest'
+
+      AccountRequest:
+        type: object
+        required:
+          - bank
+          - amount
+          - accountNumber
+          - IFSC
+          - accountName
+        properties:
+          bank:
+            type: string
+            example: KKBK
+
+          amount:
+            type: number
+            format: double
+            example: 5000
+
+          accountNumber:
+            type: string
+            example: "05212088310503"
+
+          IFSC:
+            type: string
+            example: ICIC0000123
+
+          accountName:
+            type: string
+            example: vjn
+
+      BeneSubmitResponse:
+        type: object
+        properties:
+          status:
+            type: string
+            example: success
+
+          beneNicknName:
+            type: string
+            example: yb
+
+          createdDate:
+            type: string
+            format: date
+            example: "2026-07-23"
+
+      AmendBeneResponse:
+        type: object
+        properties:
+          status:
+            type: string
+            example: success
+
+          beneNicknName:
+            type: string
+            example: yb
+
+          lastUpdatedat:
+            type: string
+            format: date
+            example: "2026-07-23"
+
+      BeneDetailRequest:
+        type: object
+        required:
+          - beneNicknName
+        properties:
+          beneNicknName:
+            type: string
+            example: sk
+
+      DeleteRequest:
+        type: object
+        required:
+          - beneNickName
+          - delFlag
+        properties:
+          beneNickName:
+            type: string
+            example: sk
+
+          delFlag:
+            type: string
+            example: Y
+
+          remarks:
+            type: string
+            example: Requested by customer
+
+      ListRequest:
+        type: object
+        properties:
+          fetchChild:
+            type: boolean
+            example: true
+
+          page:
+            type: array
+            items:
+              $ref: '#/components/schemas/Pagination'
+
+          sort:
+            type: array
+            items:
+              $ref: '#/components/schemas/Sorting'
+
+          filters:
+            type: array
+            items:
+              $ref: '#/components/schemas/Filter'
+
+      ListResponse:
+        type: object
+        properties:
+          total:
+            type: integer
+            example: 10
+
+          status:
+            type: string
+            example: success
+
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/Bene'
+
+      BeneDeletedResponse:
+        type: object
+        properties:
+          status:
+            type: string
+            example: success
+
+          beneNickName:
+            type: string
+            example: sk
+
+          deletedAt:
+            type: string
+            format: date
+            example: "2026-07-23"
+
+      Bene:
+        type: object
+        properties:
+          beneId:
+            type: integer
+            format: int64
+
+          beneName:
+            type: string
+
+          beneNicknName:
+            type: string
+
+          mobile:
+            type: string
+
+          email:
+            type: string
+            format: email
+
+          referenceId:
+            type: string
+
+          delFlag:
+            type: string
+            example: N
+
+          remarks:
+            type: string
+
+          lastupdated:
+            type: string
+            format: date
+
+          createdDate:
+            type: string
+            format: date
+
+          status:
+            type: string
+            example: Pending
+
+          migrationStatus:
+            type: string
+
+          account:
+            type: array
+            items:
+              $ref: '#/components/schemas/Account'
+
+      Account:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+
+          beneId:
+            type: integer
+            format: int64
+
+          accountName:
+            type: string
+
+          accountNumber:
+            type: string
+
+          IFSC:
+            type: string
+
+          amount:
+            type: number
+            format: double
+
+          bank:
+            type: string
+
+          branch:
+            type: string
+
+          deleAcctFlag:
+            type: string
+            example: N
+
+          lastupdated:
+            type: string
+            format: date
+
+          accountType:
+            type: string
+
+      Pagination:
+        type: object
+        properties:
+          pageNumber:
+            type: integer
+            example: 0
+
+          pageSize:
+            type: integer
+            example: 10
+
+      Sorting:
+        type: object
+        properties:
+          field:
+            type: string
+            example: beneName
+
+          direction:
+            type: string
+            example: ASC
+
+      Filter:
+        type: object
+        properties:
+          field:
+            type: string
+            example: status
+
+          operator:
+            type: string
+            example: EQUALS
+
+          value:
+            type: string
+            example: Pending
+
