@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -116,4 +117,11 @@ public class BeneService {
        response.setLastUpdatedat(new Date(System.currentTimeMillis()));
        return response;
       }
+
+    public List<AnalyticalResponse> analytical(AnalyticalRequest request) {
+       List<AnalyticalResponse> response = new ArrayList<>();
+        AnalyticalResponse rsp=new AnalyticalResponse();
+
+        return response;
+    }
 }

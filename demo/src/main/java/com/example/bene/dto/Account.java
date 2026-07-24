@@ -1,5 +1,6 @@
 package com.example.bene.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.Id;
@@ -17,6 +18,7 @@ import java.sql.Date;
         "amount",
         "bank"
 })
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Account {
 
     @Id
@@ -32,5 +34,5 @@ public class Account {
     private String deleAcctFlag;
     private Date lastupdated;
     private String accountType;
-
+    private String defautAcctFlag;
 }

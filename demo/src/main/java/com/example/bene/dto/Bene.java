@@ -1,5 +1,6 @@
 package com.example.bene.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.GeneratedValue;
@@ -19,6 +20,7 @@ import java.util.List;
         "referenceId",
         "accounts"
 })
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Bene {
 
     @Id

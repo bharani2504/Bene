@@ -44,19 +44,20 @@ public class BeneRepo {
     static final int INT_BRANCH=7;
     static final int INT_DEL_ACCT_FLAG=8;
     static final int INT_ACCOUNT_TYPE=9;
+    static final int INT_DEFAULT_ACCT_FLAG=10;
 
     static final int GET_BENE_BY_NICK_NAME=1;
 
     private static final Logger log = LoggerFactory.getLogger(BeneRepo.class);
 
     String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate,status,migration_status) values(?,?,?,?,?,?,?,?,?)";
-    String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag,accountType) values(?,?,?,?,?,?,?,?,?)";
+    String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag,accountType,default_Account_flag) values(?,?,?,?,?,?,?,?,?,?)";
 
     String findone="Select * from bene where bene_nick_name=?";
     String accQuery = "SELECT * FROM account WHERE bene_id = ?";
 
     String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=?,status=? where bene_nick_name=?";
-    String accupdate="Update account Set account_name=?,ifsc=?,amount=?,lastupdated=?,accountType=? where bene_id=?";
+    String accupdate="Update account Set account_name=?,ifsc=?,amount=?,lastupdated=?,accountType=?,default_Account_flag=? where bene_id=?";
 
 
 
@@ -93,6 +94,7 @@ public class BeneRepo {
                as.setString(INT_BRANCH,ac.getBranch());
                as.setString(INT_DEL_ACCT_FLAG,ac.getDeleAcctFlag());
                as.setString(INT_ACCOUNT_TYPE,ac.getAccountType());
+               as.setString(INT_DEFAULT_ACCT_FLAG,ac.getDefautAcctFlag());
                int affectedrows=  as.executeUpdate();
 
                log.info("account affected rows",affectedrows);
@@ -148,6 +150,7 @@ public class BeneRepo {
                         account.setBranch(rs2.getString("branch"));
                         account.setDeleAcctFlag(rs2.getString("delAccFlag"));
                         account.setAccountType(rs2.getString("accountType"));
+                        account.setDefautAcctFlag(rs2.getString("default_Account_flag"));
                         account.setBeneId(beneId);
                         accounts.add(account);
                    }
@@ -260,7 +263,8 @@ public class BeneRepo {
                     as.setDouble(3, ac.getAmount());
                     as.setDate(4, (Date) ac.getLastupdated());
                     as.setString(5, ac.getAccountType());
-                    as.setLong(6, bn.getBeneId());
+                    as.setString(7,ac.getDefautAcctFlag());
+                    as.setLong(8, bn.getBeneId());
                     int affectedrows = as.executeUpdate();
                 }
             }

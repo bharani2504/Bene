@@ -39,3 +39,10 @@ ALTER table bene add column migration_status VARCHAR(50);
 --changeset beneficiary:Bene_table-2026072200
 ALTER TABLE bene DROP INDEX bene_nick_name;
 ALTER TABLE bene MODIFY COLUMN bene_nick_name VARCHAR(100) NOT NULL;
+
+--changeset beneficiary:Bene_table-2026072300
+ALTER table account add column default_Account_flag VARCHAR(50)
+
+--changeset beneficiary:Bene_table-2026072400
+ALTER TABLE account DROP INDEX  account_number;
+ALTER TABLE account MODIFY COLUMN  account_number VARCHAR(100) NOT NULL;

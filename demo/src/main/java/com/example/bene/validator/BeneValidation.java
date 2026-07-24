@@ -41,7 +41,7 @@ public class BeneValidation {
             }
 
             if(bn!=null && bn.getBeneNicknName()!=null) {
-                if (bn.getBeneNicknName().equals(bene.getBeneNicknName())) {
+                if (bn.getBeneNicknName().equals(bene.getBeneNicknName()) && bene.getDelFlag().equals("N")) {
                    applyError("Beneficiary nick name is already exsists");
                 }
             }
@@ -67,6 +67,17 @@ public class BeneValidation {
             bene.setStatus("Pending");
             log.info("Bene ifsc validation");
             bene.setCreatedDate(new Date(System.currentTimeMillis()));
+
+            List<Account> defaultAcct=bene.getAccount().stream().filter(s->s.getDefautAcctFlag()
+                    .equalsIgnoreCase("Y")).toList();
+
+            if(defaultAcct==null){
+                applyError("minimum one account should be default");
+            }
+
+            if(defaultAcct.size()>1){
+                applyError("only one account should be default");
+            }
             ifscValidation(bene);
             for(Account ac : bene.getAccount()){
                 if(ac.getAccountNumber()==null){
@@ -156,7 +167,6 @@ public class BeneValidation {
         Date dt=new Date(System.currentTimeMillis());
         for(Account acc : amendAccount){
             Account accc = existingMap.get(acc.getAccountNumber());
-
             if(accc==null){
                 applyError("account number is non amendable filed");
             }
@@ -166,6 +176,5 @@ public class BeneValidation {
 
         request.setLastupdated(dt);
         request.setAccount(amendAccount);
-
     }
 }
