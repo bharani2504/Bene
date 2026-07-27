@@ -2,6 +2,8 @@ package com.example.bene.service;
 
 
 import com.example.bene.dto.*;
+import com.example.bene.exception.BeneficiaryException;
+import com.example.bene.lock.BeneLock;
 import com.example.bene.repo.BeneRepo;
 import com.example.bene.util.EmailUtil;
 import com.example.bene.validator.BeneValidation;
@@ -18,6 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class BeneService {
@@ -30,6 +34,10 @@ public class BeneService {
 
     @Autowired
     private BeneValidation beneValidation;
+
+    @Autowired
+    private BeneLock beneLock;
+
 
     private Bene bene;
     private EmailUtil emailUtil;
@@ -68,12 +76,29 @@ public class BeneService {
              return bene;
     }
 
-    public  BeneDeletedResponse delete(DeleteRequest request) throws SQLException {
+    public  BeneDeletedResponse delete(DeleteRequest request,String server) throws SQLException {
        BeneDeletedResponse response = new BeneDeletedResponse();
        String status="";
+       String key = server + " " + request.getBeneNickName();
+        ReentrantLock lock=beneLock.getLock(key);
        if(request.getBeneNickName()!=null) {
-           beneValidation.deleteValidator(request);
-           status= benerepo.Delete(request);
+           boolean acquired = false;
+           try {
+               acquired=lock.tryLock(0, TimeUnit.SECONDS);
+               if(!acquired){
+                   throw  new BeneficiaryException("Technical error");
+               }
+               beneValidation.deleteValidator(request);
+               status = benerepo.Delete(request);
+           } catch (InterruptedException e) {
+               Thread.currentThread().interrupt();
+               throw new RuntimeException("Lock acquisition interrupted", e);
+           }finally {
+               if (acquired) {
+                   lock.unlock();
+                   beneLock.removeLockIfUnused(key);
+               }
+           }
        }
        response.setStatus(status);
        response.setBeneNickName(request.getBeneNickName());

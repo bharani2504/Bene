@@ -2,7 +2,9 @@ package com.example.bene.controller;
 
 import com.example.bene.dto.*;
 import com.example.bene.service.BeneService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +39,11 @@ public class BeneController {
 
     @PostMapping("/delete")
     public ResponseEntity<BeneDeletedResponse> delete(@RequestBody DeleteRequest request) throws SQLException {
-        BeneDeletedResponse response=beneService.delete(request);
+        String server="";
+        if(request instanceof HttpServletRequest httpRequest){
+            server=httpRequest.getRemoteAddr();
+        }
+        BeneDeletedResponse response=beneService.delete(request,server);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
