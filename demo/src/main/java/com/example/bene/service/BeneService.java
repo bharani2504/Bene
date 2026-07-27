@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Service
@@ -80,23 +81,19 @@ public class BeneService {
        BeneDeletedResponse response = new BeneDeletedResponse();
        String status="";
        String key = server + " " + request.getBeneNickName();
-        ReentrantLock lock=beneLock.getLock(key);
+        Lock lock=beneLock.obtainLock(key);
        if(request.getBeneNickName()!=null) {
            boolean acquired = false;
            try {
-               acquired=lock.tryLock(0, TimeUnit.SECONDS);
+               acquired=beneLock.tryLock(lock);
                if(!acquired){
                    throw  new BeneficiaryException("Technical error");
                }
                beneValidation.deleteValidator(request);
                status = benerepo.Delete(request);
-           } catch (InterruptedException e) {
-               Thread.currentThread().interrupt();
-               throw new RuntimeException("Lock acquisition interrupted", e);
-           }finally {
+           } finally {
                if (acquired) {
-                   lock.unlock();
-                   beneLock.removeLockIfUnused(key);
+                   beneLock.unlock(lock);
                }
            }
        }

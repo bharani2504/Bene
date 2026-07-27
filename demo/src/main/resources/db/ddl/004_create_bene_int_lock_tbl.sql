@@ -1,0 +1,10 @@
+
+--liquibase formatted sql
+--changeset beneficiary:Bene_Lock-2026072700
+CREATE TABLE INT_LOCK (
+    LOCK_KEY CHAR(36) NOT NULL,
+    REGION VARCHAR(100) NOT NULL,
+    CLIENT_ID CHAR(36),
+    CREATED_DATE TIMESTAMP NOT NULL,
+    PRIMARY KEY (LOCK_KEY, REGION)
+);
