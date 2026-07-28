@@ -27,21 +27,22 @@ import java.util.concurrent.locks.ReentrantLock;
 @Service
 public class BeneService {
 
-    @Autowired
-    private BeneRepo benerepo;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private BeneValidation beneValidation;
-
-    @Autowired
-    private BeneLock beneLock;
+    private static BeneRepo benerepo;
+    private static EmailService emailService;
+    private static BeneValidation beneValidation;
+    private static BeneLock beneLock;
 
 
     private Bene bene;
     private EmailUtil emailUtil;
+
+    public BeneService(BeneRepo benerepo,EmailService emailService,BeneValidation beneValidation,BeneLock beneLock){
+        this.benerepo=benerepo;
+        this.emailService=emailService;
+        this.beneValidation=beneValidation;
+        this.beneLock=beneLock;
+    }
+
     private static final Logger log = LoggerFactory.getLogger(BeneService.class);
 
    public BeneSubmitResponse insret(Bene bene) throws SQLException, IOException {

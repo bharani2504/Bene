@@ -11,5 +11,6 @@
     <include file="db/ddl/002_create_bene_audit_integration_tbl.sql"/>
     <include file="org/quartz/impl/jdbcjobstore/liquibase.quartz.init.xml"/>
     <include file="db/ddl/003_create_bene_migration_table.sql"/>
+    <include file="db/ddl/004_create_bene_int_lock_tbl.sql"/>
 
 </databaseChangeLog>
