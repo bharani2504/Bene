@@ -128,7 +128,7 @@ public class BeneValidation {
     }
 
 
-    public BeneficiaryException applyError(String error){
+    public  static BeneficiaryException applyError(String error){
         throw  new BeneficiaryException(error);
     }
 
