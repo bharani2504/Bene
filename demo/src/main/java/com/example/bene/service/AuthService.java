@@ -8,6 +8,9 @@ import com.example.bene.validator.BeneValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
 public class AuthService {
 
@@ -20,18 +23,23 @@ public class AuthService {
     @Autowired
     private Jwt jwt;
 
-     public void login(UserSession session){
+     public Map<String,Object> login(UserSession session){
 
+         Map<String,Object>mp=new HashMap<>();
          UserSession sess=corpRepo.findbyUsercrn(session.getUserCRN());
          String hashpassword=sess.getPassword();
-
+         String accessTokem="";
+         String refreshToken="";
          if(Hashing.verifyPassword(session.getPassword(),hashpassword)){
-            String accessTokem=jwt.generateAccessToken(sess);
-            String refreshToken= jwt.generateRefreshToken(sess);
+             accessTokem=jwt.generateAccessToken(sess);
+             refreshToken= jwt.generateRefreshToken(sess);
          }else{
              validation.applyError("Give the correct Password");
          }
+         mp.put("accessTokem",accessTokem);
+         mp.put("refreshToken",refreshToken);
 
+         return mp;
      }
 
 

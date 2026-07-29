@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 public class AuthController {
 
@@ -15,9 +17,9 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(UserSession session){
-        authService.login(session);
-        return new ResponseEntity<>("", HttpStatus.OK);
+    public ResponseEntity<Map<String,Object>> login(UserSession session){
+       Map<String,Object> mp=authService.login(session);
+        return new ResponseEntity<>(mp, HttpStatus.OK);
     }
 
 }
