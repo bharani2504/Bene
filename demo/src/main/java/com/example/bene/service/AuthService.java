@@ -26,7 +26,7 @@ public class AuthService {
      public Map<String,Object> login(UserSession session){
 
          Map<String,Object>mp=new HashMap<>();
-         UserSession sess=corpRepo.findbyUsercrn(session.getUserCRN());
+         UserSession sess=corpRepo.findByUserCrn(session.getUserCrn());
          String hashpassword=sess.getPassword();
          String accessTokem="";
          String refreshToken="";

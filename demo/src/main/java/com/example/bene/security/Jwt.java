@@ -25,9 +25,9 @@ public class Jwt {
     public String generateAccessToken(UserSession user) {
 
         return Jwts.builder()
-                .claim("userCrn", user.getUserCRN())
+                .claim("userCrn", user.getUserCrn())
                 .claim("role", user.getRole())
-                .setSubject(user.getUserCRN())
+                .setSubject(user.getUserCrn())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
                 .signWith(SECRET_KEY,SignatureAlgorithm.HS256)
@@ -37,7 +37,7 @@ public class Jwt {
     public String generateRefreshToken(UserSession user) {
 
         return Jwts.builder()
-                .setSubject(user.getUserCRN())
+                .setSubject(user.getUserCrn())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 30L * 24 * 60 * 60 * 1000))
                 .signWith(SECRET_KEY,SignatureAlgorithm.HS256)

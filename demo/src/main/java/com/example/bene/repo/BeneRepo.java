@@ -263,8 +263,8 @@ public class BeneRepo {
                     as.setDouble(3, ac.getAmount());
                     as.setDate(4, (Date) ac.getLastupdated());
                     as.setString(5, ac.getAccountType());
-                    as.setString(7,ac.getDefautAcctFlag());
-                    as.setLong(8, bn.getBeneId());
+                    as.setString(6,ac.getDefautAcctFlag());
+                    as.setLong(7, bn.getBeneId());
                     int affectedrows = as.executeUpdate();
                 }
             }

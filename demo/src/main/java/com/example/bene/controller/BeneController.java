@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class BeneController {
     private BeneService beneService;
 
     @PostMapping("/submit")
+    @PreAuthorize("hasRole('MAKER')")
     public ResponseEntity<BeneSubmitResponse> Submit(@RequestBody Bene bene) throws SQLException, IOException {
         String referenceId=beneService.referenceId();
         bene.setReferenceId(referenceId);

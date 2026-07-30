@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name ="USER_DETAILS")
+@Table(name ="corp_crn_details")
 public class UserSession {
 
     @Id
@@ -16,12 +16,12 @@ public class UserSession {
     private String corpCRN;
 
     @Column(name = "user_crn")
-    private String userCRN;
+    private String userCrn;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "roles")
+    @Column(name = "role")
     private String role;
 
 }

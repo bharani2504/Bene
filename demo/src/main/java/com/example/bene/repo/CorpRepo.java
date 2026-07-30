@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 @Repository
 public interface CorpRepo extends JpaRepository<UserSession,Long>{
 
-    UserSession findbyUsercrn(String userCRN);
+    UserSession findByUserCrn(String userCrn);
 
 }

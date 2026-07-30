@@ -27,8 +27,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
         String uri =request.getRequestURI();
-        if (uri.contains("/login") ||(uri.contains("/user/login"))) {
+        if (uri.contains("/login") ||(uri.contains("/corp/save"))) {
             filterChain.doFilter(request, response);
+            return;
         }
 
         String headers=request.getHeader("Authorization");

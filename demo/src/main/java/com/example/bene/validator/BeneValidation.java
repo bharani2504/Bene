@@ -41,7 +41,7 @@ public class BeneValidation {
             }
 
             if(bn!=null && bn.getBeneNicknName()!=null) {
-                if (bn.getBeneNicknName().equals(bene.getBeneNicknName()) && bene.getDelFlag().equals("N")) {
+                if (bn.getBeneNicknName().equals(bene.getBeneNicknName()) && bn.getDelFlag().equals("N")) {
                    applyError("Beneficiary nick name is already exsists");
                 }
             }
