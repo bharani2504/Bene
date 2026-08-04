@@ -5,6 +5,7 @@ import jdk.jfr.Enabled;
 import lombok.Data;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -26,12 +27,12 @@ public class MfaRequest {
     private String status;
 
     @Column(name = "expiredAt")
-    private Date expiredat;
+    private Timestamp expiredat;
 
     @Column(name = "attempt")
     private int attempt;
 
     @Column(name = "isLocked")
-    private boolean isLocked;
+    private boolean isLocked = false;
 
 }

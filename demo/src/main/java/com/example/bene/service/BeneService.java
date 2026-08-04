@@ -1,24 +1,31 @@
 package com.example.bene.service;
 
 
+import ch.qos.logback.core.testUtil.RandomUtil;
 import com.example.bene.dto.*;
+import com.example.bene.entity.MfaRequest;
 import com.example.bene.exception.BeneficiaryException;
 import com.example.bene.lock.BeneLock;
 import com.example.bene.repo.BeneRepo;
+import com.example.bene.repo.MfaTokenRepo;
 import com.example.bene.util.EmailUtil;
 import com.example.bene.validator.BeneValidation;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -31,16 +38,18 @@ public class BeneService {
     private static EmailService emailService;
     private static BeneValidation beneValidation;
     private static BeneLock beneLock;
+    private static MfaTokenRepo mfaTokenRepo;
 
 
     private Bene bene;
     private EmailUtil emailUtil;
 
-    public BeneService(BeneRepo benerepo,EmailService emailService,BeneValidation beneValidation,BeneLock beneLock){
+    public BeneService(BeneRepo benerepo, EmailService emailService, BeneValidation beneValidation, BeneLock beneLock, MfaTokenRepo mfaTokenRepo){
         this.benerepo=benerepo;
         this.emailService=emailService;
         this.beneValidation=beneValidation;
         this.beneLock=beneLock;
+        this.mfaTokenRepo=mfaTokenRepo;
     }
 
     private static final Logger log = LoggerFactory.getLogger(BeneService.class);
@@ -148,14 +157,86 @@ public class BeneService {
         return response;
     }
 
-    public AuthorizeResponse authorize(AuthorizeRequest request) {
+    public AuthorizeResponse authorize(AuthorizeRequest request) throws SQLException {
 
-       AuthorizeResponse response = new AuthorizeResponse();
+        AuthorizeResponse response = new AuthorizeResponse();
+
+        if (request.getBeneNickName() == null || request.getBeneNickName().isEmpty()) {
+            BeneValidation.applyError("BeneNickName is Mandatory");
+        }
+
+        Bene bene = benerepo.findone(request.getBeneNickName());
+        if (bene == null) {
+            BeneValidation.applyError("Beneficiary does not exist");
+        }
+
+        if (!"Pending".equals(bene.getStatus())) {
+            BeneValidation.applyError("Beneficiary is not in Pending status");
+        }
+
+        if (request.getMfaToken() == null) {
 
 
+            MfaRequest req = new MfaRequest();
+            String token = "BENE" + UUID.randomUUID().toString();
+            String otp = String.format("%06d", new SecureRandom().nextInt(1000000));
 
+            req.setToken(token);
+            req.setOtp(otp);
+            req.setStatus("Pending");
+            req.setExpiredat(java.sql.Timestamp.valueOf(LocalDateTime.now().plusMinutes(2)));
+            req.setAttempt(3);       // attempts remaining, persisted on the entity
+            req.setLocked(false);
+            mfaTokenRepo.save(req);
 
+            response.setOtp(otp);
+            response.setMfaToken(token);
+            return response;
 
-       return response;
+        } else {
+
+            MfaRequest req = mfaTokenRepo.getMfaByToken(request.getMfaToken());
+            if (req == null) {
+                BeneValidation.applyError("Invalid MFA token");
+
+            }
+
+            if (LocalDateTime.now().isAfter(req.getExpiredat().toLocalDateTime())) {
+                BeneValidation.applyError("OTP expired. Please retry");
+            }
+
+            if (req.getOtp() == null || !req.getOtp().equals(request.getOtp())) {
+                req.setStatus("Failed");
+                int remaining = req.getAttempt() - 1;
+                req.setAttempt(remaining);
+                if (remaining <= 0) {
+                    req.setLocked(true);
+                }
+                mfaTokenRepo.save(req);
+                BeneValidation.applyError("Invalid OTP");
+            }
+
+            req.setStatus("Success");
+            mfaTokenRepo.save(req);
+
+            if ("Approve".equals(request.getAction())) {
+                bene.setStatus("Approved");
+                bene.setLastupdated(new java.sql.Date(System.currentTimeMillis()));
+            } else if ("Reject".equals(request.getAction())) {
+                bene.setStatus("Rejected");
+                bene.setLastupdated(new java.sql.Date(System.currentTimeMillis()));
+                bene.setRemarks(request.getRejectReason());
+            } else {
+                BeneValidation.applyError("Invalid action. Must be Approve or Reject");
+            }
+
+            Amend amend = new Amend();
+            BeanUtils.copyProperties(bene, amend);
+            benerepo.amend(amend);
+
+            response.setBeneNickName(bene.getBeneName());
+            response.setStatus("Success");
+            return response;
+        }
     }
 }

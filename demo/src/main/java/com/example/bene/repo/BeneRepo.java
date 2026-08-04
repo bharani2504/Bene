@@ -53,10 +53,10 @@ public class BeneRepo {
     String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate,status,migration_status) values(?,?,?,?,?,?,?,?,?)";
     String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag,accountType,default_Account_flag) values(?,?,?,?,?,?,?,?,?,?)";
 
-    String findone="Select * from bene where bene_nick_name=?";
-    String accQuery = "SELECT * FROM account WHERE bene_id = ?";
+    String findone="Select * from bene where bene_nick_name=? and delFlag='N'";
+    String accQuery = "SELECT * FROM account WHERE bene_id = ? and delAccFlag='N'";
 
-    String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=?,status=? where bene_nick_name=?";
+    String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=?,status=?,remarks=? where bene_nick_name=?";
     String accupdate="Update account Set account_name=?,ifsc=?,amount=?,lastupdated=?,accountType=?,default_Account_flag=? where bene_id=?";
 
 
@@ -251,7 +251,8 @@ public class BeneRepo {
             ps.setString(3,request.getEmail());
             ps.setDate(4, request.getLastupdated());
             ps.setString(5,request.getStatus());
-            ps.setString(6,request.getBeneNicknName());
+            ps.setString(6,request.getRemarks());
+            ps.setString(7,request.getBeneNicknName());
             ps.executeUpdate();
             Bene bn = findone(request.getBeneNicknName());
 

@@ -68,7 +68,7 @@ public class BeneController {
     }
 
     @PostMapping("/authorize")
-    public ResponseEntity<AuthorizeResponse> authorize(@RequestBody AuthorizeRequest request){
+    public ResponseEntity<AuthorizeResponse> authorize(@RequestBody AuthorizeRequest request) throws SQLException {
         AuthorizeResponse response = beneService.authorize(request);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
