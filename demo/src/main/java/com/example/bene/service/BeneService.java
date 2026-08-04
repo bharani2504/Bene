@@ -202,6 +202,8 @@ public class BeneService {
             }
 
             if (LocalDateTime.now().isAfter(req.getExpiredat().toLocalDateTime())) {
+                req.setStatus("Expired");
+                mfaTokenRepo.save(req);
                 BeneValidation.applyError("OTP expired. Please retry");
             }
 

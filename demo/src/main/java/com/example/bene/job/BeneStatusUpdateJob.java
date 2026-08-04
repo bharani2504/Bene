@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,11 +30,16 @@ public class BeneStatusUpdateJob {
     public static void updatePendingBene() throws SQLException {
 
         ListRequest request = new ListRequest();
+        LocalDate sevenDaysBefore = LocalDate.now().minusDays(7);
         List<Filter> filters = new ArrayList<>();
         Filter filter = new Filter();
         filter.setName("status");
         filter.setValue("Pending");
+        Filter fil =new Filter();
+        fil.setName("createdDate");
+        fil.setValue(String.valueOf(sevenDaysBefore));
         filters.add(filter);
+        filters.add(fil);
         request.setFilters(filters);
         request.setFetchChild(true);
         List<Bene> bn = beneRepo.list(request);
@@ -44,8 +50,9 @@ public class BeneStatusUpdateJob {
             for (Bene bene : bn) {
                 Amend amend = new Amend();
                 BeanUtils.copyProperties(bene, amend);
-                amend.setStatus("Approved");
+                amend.setStatus("Rejected");
                 amend.setLastupdated(dt);
+                amend.setRemarks("System rejected the Beneficiary");
                 beneRepo.amend(amend);
                 updatedCount++;
             }

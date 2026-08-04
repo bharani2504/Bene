@@ -177,9 +177,21 @@ public class BeneRepo {
             selectAll = "SELECT * FROM bene ORDER BY " + value + " " + sortOrder + " LIMIT ?, ?";
            }
            else{
-               String name = request.getFilters().get(0).getName();
-               String filedValue= request.getFilters().get(0).getValue();
-               selectAll = "SELECT * FROM bene WHERE " + name + " = '" + filedValue + "'";
+
+               StringBuilder whereClause = new StringBuilder();
+               List<Object> params = new ArrayList<>();
+               for(Filter filter:request.getFilters()) {
+                   String name = filter.getName();
+                   String filedValue = filter.getValue();
+                   if (whereClause.length() > 0) {
+                       whereClause.append(" AND ");
+                   } else {
+                       whereClause.append("WHERE ");
+                   }
+                   whereClause.append(name).append(" = ?");
+                   params.add(filedValue);
+               }
+               selectAll = "SELECT * FROM bene " + whereClause ;
            }
 
 
