@@ -62,8 +62,13 @@ public class BeneController {
     }
 
     @PostMapping("/analytical")
-    public ResponseEntity<List<AnalyticalResponse>> analytical(@RequestBody AnalyticalRequest request) throws SQLException {
+    public ResponseEntity<List<AnalyticalResponse>> analytical(@RequestBody AnalyticalRequest request) throws Exception {
         List<AnalyticalResponse> response=  beneService.analytical(request);
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+    @PostMapping("/authorize")
+    public ResponseEntity<AuthorizeResponse> authorize(@RequestBody AuthorizeRequest request){
+        return new ResponseEntity<>(,HttpStatus.OK);
     }
 }

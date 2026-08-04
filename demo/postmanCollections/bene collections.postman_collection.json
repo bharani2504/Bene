@@ -1,9 +1,10 @@
 {
   "info": {
-    "_postman_id": "57e5b10c-dcf3-4393-ac85-05a38768d900",
+    "_postman_id": "47643bb0-c22c-4abe-b6ce-37a5b6917445",
     "name": "bene collections",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "45648374"
+    "_exporter_id": "51196384",
+    "_collection_link": "https://go.postman.co/collection/51196384-47643bb0-c22c-4abe-b6ce-37a5b6917445?source=collection_link"
   },
   "item": [
     {
@@ -183,6 +184,63 @@
           "path": [
             "bene",
             "amend"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n\"corpCRN\":\"100012028\",\r\n\"password\":\"250408\",\r\n\"role\":\"MAKER\",\r\n\"userCrn\":\"100012030\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/corp/save",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "corp",
+            "save"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n   \"corpCRN\":\"100012028\",\r\n   \"password\":\"250408\",\r\n   \"userCrn\":\"100012030\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "login"
           ]
         }
       },
