@@ -14,7 +14,7 @@ public class AuthorizeRequest {
     @JsonProperty("action")
     private String action;
 
-    @JsonProperty("")
+    @JsonProperty("rejectReason")
     private String rejectReason;
 
     @JsonProperty("referenceId")

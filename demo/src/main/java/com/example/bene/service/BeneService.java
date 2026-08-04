@@ -147,4 +147,15 @@ public class BeneService {
 
         return response;
     }
+
+    public AuthorizeResponse authorize(AuthorizeRequest request) {
+
+       AuthorizeResponse response = new AuthorizeResponse();
+
+
+
+
+
+       return response;
+    }
 }

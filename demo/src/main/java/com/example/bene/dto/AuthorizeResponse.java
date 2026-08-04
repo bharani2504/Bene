@@ -17,5 +17,11 @@ public class AuthorizeResponse {
     @JsonProperty("beneNickName")
     private String beneNickName;
 
+    @JsonProperty("mfaToken")
+    private String mfaToken;
+
+    @JsonProperty("otp")
+    private String otp;
+
 
 }

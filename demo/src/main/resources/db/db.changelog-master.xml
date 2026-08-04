@@ -13,5 +13,6 @@
     <include file="db/ddl/003_create_bene_migration_table.sql"/>
     <include file="db/ddl/004_create_bene_int_lock_tbl.sql"/>
     <include file="db/ddl/005_create_corp_details_tbl.sql"/>
+    <include file="db/ddl/006_create_mfa_token_tbl.sql"/>
 
 </databaseChangeLog>
