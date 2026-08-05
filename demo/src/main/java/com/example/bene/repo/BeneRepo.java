@@ -188,8 +188,7 @@ public class BeneRepo {
                    } else {
                        whereClause.append("WHERE ");
                    }
-                   whereClause.append(name).append(" = ?");
-                   params.add(filedValue);
+                   whereClause.append(name).append(" = ").append("'"+filedValue+"'");
                }
                selectAll = "SELECT * FROM bene " + whereClause ;
            }
@@ -227,13 +226,14 @@ public class BeneRepo {
        Long bene_id= bene.getBeneId();
        List<Account>acc=bene.getAccount();
        String delAccFlag="Y";
-       String update ="Update Bene Set delFlag=?,remarks=? where  bene_nick_name=?";
+       String update ="Update Bene Set delFlag=?,remarks=?,status=? where bene_nick_name=?";
        String accupdate="Update account Set delAccFlag=? where bene_id=?";
         try(PreparedStatement ps = con.prepareStatement(update);
             PreparedStatement ps1= con.prepareStatement(accupdate))
         {
           ps.setString(1,delFlag);
           ps.setString(2,remarks);
+          ps.setString(3,request.getStatus());
           ps.setString(3, bene_nick_name);
           ps.executeUpdate();
           for (Account ac : acc){

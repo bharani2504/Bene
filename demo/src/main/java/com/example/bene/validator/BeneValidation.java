@@ -139,6 +139,7 @@ public class BeneValidation {
          applyError("Beneficiary is already marked as deleted");
      }
      request.setDelFlag("Y");
+     request.setStatus("Pending");
     }
 
     public void amend(Amend request) throws SQLException {
@@ -173,7 +174,7 @@ public class BeneValidation {
 
             acc.setLastupdated(dt);
         }
-
+        request.setStatus("Pending");
         request.setLastupdated(dt);
         request.setAccount(amendAccount);
     }
