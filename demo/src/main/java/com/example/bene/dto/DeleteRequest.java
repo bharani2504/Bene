@@ -10,4 +10,5 @@ public class DeleteRequest {
     private String delFlag;
     private String remarks;
     private String status;
+    private String requestType;
 }

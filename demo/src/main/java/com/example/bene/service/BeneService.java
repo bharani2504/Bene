@@ -162,6 +162,10 @@ public class BeneService {
             BeneValidation.applyError("Beneficiary does not exist");
         }
 
+        if(bene.getDelFlag().equals("Y") && bene.getStatus().equals("Deleted")){
+            BeneValidation.applyError("Beneficiary is Deleted");
+        }
+
         if (!"Pending".equals(bene.getStatus())) {
             BeneValidation.applyError("Beneficiary is not in Pending status");
         }
@@ -215,9 +219,18 @@ public class BeneService {
             mfaTokenRepo.save(req);
 
             if ("Approve".equals(request.getAction())) {
-                bene.setStatus("Approved");
+                if(bene.getDelFlag().equals("Y")){
+                    bene.setStatus("Deleted");
+                }else {
+                    bene.setStatus("Approved");
+                }
                 bene.setLastupdated(new java.sql.Date(System.currentTimeMillis()));
             } else if ("Reject".equals(request.getAction())) {
+                if("Beneficiary Deletion".equalsIgnoreCase(bene.getRequestType())) {
+                    if (bene.getDelFlag().equals("Y") && bene.getStatus().equals("Pending")) {
+                        bene.setDelFlag("N");
+                    }
+                }
                 bene.setStatus("Rejected");
                 bene.setLastupdated(new java.sql.Date(System.currentTimeMillis()));
                 bene.setRemarks(request.getRejectReason());

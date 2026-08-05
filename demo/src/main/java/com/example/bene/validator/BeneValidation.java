@@ -63,6 +63,7 @@ public class BeneValidation {
                 }
             }
 
+            bene.setRequestType("Beneficiary Addition");
             bene.setDelFlag("N");
             bene.setStatus("Pending");
             log.info("Bene ifsc validation");
@@ -138,6 +139,7 @@ public class BeneValidation {
      if(bene.getDelFlag()!= null && bene.getDelFlag().equals("Y")){
          applyError("Beneficiary is already marked as deleted");
      }
+     request.setStatus("Beneficiary Deletion");
      request.setDelFlag("Y");
      request.setStatus("Pending");
     }
@@ -174,6 +176,7 @@ public class BeneValidation {
 
             acc.setLastupdated(dt);
         }
+        request.setStatus("Beneficiary Modification");
         request.setStatus("Pending");
         request.setLastupdated(dt);
         request.setAccount(amendAccount);

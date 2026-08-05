@@ -34,6 +34,7 @@ public class BeneRepo {
     static final int INT_CREATED_DATE=7;
     static final int INT_STATUS=8;
     static final int INT_MIGRATION_STATUS=9;
+    static final int INT_REQUEST_TYPE=10;
 
     static final int INT_BENE_ID=1;
     static final int INT_ACCOUNT_NAME=2;
@@ -50,13 +51,13 @@ public class BeneRepo {
 
     private static final Logger log = LoggerFactory.getLogger(BeneRepo.class);
 
-    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate,status,migration_status) values(?,?,?,?,?,?,?,?,?)";
+    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate,status,migration_status,request_type) values(?,?,?,?,?,?,?,?,?,?)";
     String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag,accountType,default_Account_flag) values(?,?,?,?,?,?,?,?,?,?)";
 
-    String findone="Select * from bene where bene_nick_name=? and delFlag='N'";
-    String accQuery = "SELECT * FROM account WHERE bene_id = ? and delAccFlag='N'";
+    String findone="Select * from bene where bene_nick_name=?";
+    String accQuery = "SELECT * FROM account WHERE bene_id = ?";
 
-    String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=?,status=?,remarks=? where bene_nick_name=?";
+    String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=?,status=?,remarks=?,request_type=? where bene_nick_name=?";
     String accupdate="Update account Set account_name=?,ifsc=?,amount=?,lastupdated=?,accountType=?,default_Account_flag=? where bene_id=?";
 
 
@@ -77,6 +78,7 @@ public class BeneRepo {
            ps.setDate(INT_CREATED_DATE,bene.getCreatedDate());
            ps.setString(INT_STATUS,bene.getStatus());
            ps.setString(INT_MIGRATION_STATUS,bene.getMigrationStatus());
+           ps.setString(INT_REQUEST_TYPE,bene.getRequestType());
            ps.executeUpdate();
 
            ResultSet re = ps.getGeneratedKeys();
@@ -136,6 +138,7 @@ public class BeneRepo {
                    bene.setDelFlag(rs.getString("delFlag"));
                    bene.setCreatedDate(rs.getDate("createdDate"));
                    bene.setStatus(rs.getString("status"));
+                   bene.setRequestType(rs.getString("request_type"));
                    ps1.setLong(1,beneId);
                    ResultSet rs2=ps1.executeQuery();
 
@@ -226,7 +229,7 @@ public class BeneRepo {
        Long bene_id= bene.getBeneId();
        List<Account>acc=bene.getAccount();
        String delAccFlag="Y";
-       String update ="Update Bene Set delFlag=?,remarks=?,status=? where bene_nick_name=?";
+       String update ="Update Bene Set delFlag=?,remarks=?,status=?,request_type=? where bene_nick_name=?";
        String accupdate="Update account Set delAccFlag=? where bene_id=?";
         try(PreparedStatement ps = con.prepareStatement(update);
             PreparedStatement ps1= con.prepareStatement(accupdate))
@@ -234,7 +237,8 @@ public class BeneRepo {
           ps.setString(1,delFlag);
           ps.setString(2,remarks);
           ps.setString(3,request.getStatus());
-          ps.setString(3, bene_nick_name);
+          ps.setString(4,request.getRequestType());
+          ps.setString(5, bene_nick_name);
           ps.executeUpdate();
           for (Account ac : acc){
               ps1.setString(1,delAccFlag);
@@ -264,7 +268,8 @@ public class BeneRepo {
             ps.setDate(4, request.getLastupdated());
             ps.setString(5,request.getStatus());
             ps.setString(6,request.getRemarks());
-            ps.setString(7,request.getBeneNickName());
+            ps.setString(7,request.getRequestType());
+            ps.setString(8,request.getBeneNickName());
             ps.executeUpdate();
             Bene bn = findone(request.getBeneNickName());
 

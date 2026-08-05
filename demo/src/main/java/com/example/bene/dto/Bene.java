@@ -51,6 +51,8 @@ public class Bene {
 
     private String migrationStatus;
 
+    private String requestType;
+
     private List<Account> account;
 
 }

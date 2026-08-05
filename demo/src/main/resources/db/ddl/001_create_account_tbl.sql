@@ -46,3 +46,6 @@ ALTER table account add column default_Account_flag VARCHAR(50)
 --changeset beneficiary:Bene_table-2026072400
 ALTER TABLE account DROP INDEX  account_number;
 ALTER TABLE account MODIFY COLUMN  account_number VARCHAR(100) NOT NULL;
+
+--changeset beneficiary:Bene_table-2026080500
+ALTER table bene add column request_type VARCHAR(100);
