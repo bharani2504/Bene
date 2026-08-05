@@ -9,13 +9,13 @@ public class BeneAuditService {
 
     private static BeneAuditRepo beneAuditRepo;
 
-    public BeneAuditService(BeneAuditRepo beneAuditRepo){
-        this.beneAuditRepo=beneAuditRepo;
+    public BeneAuditService(BeneAuditRepo beneAuditRepo) {
+        this.beneAuditRepo = beneAuditRepo;
     }
 
     public void createLog(Audit audit) {
 
-        if(audit!=null){
+        if (audit != null) {
             beneAuditRepo.save(audit);
         }
     }

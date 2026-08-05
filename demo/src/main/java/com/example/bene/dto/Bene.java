@@ -14,7 +14,7 @@ import java.util.List;
 @JsonPropertyOrder({
         "beneId",
         "beneName",
-        "beneNicknName",
+        "beneNickName",
         "mobile",
         "email",
         "referenceId",
@@ -29,7 +29,7 @@ public class Bene {
 
     private String beneName;
 
-    private String beneNicknName;
+    private String beneNickName;
 
     private String mobile;
 

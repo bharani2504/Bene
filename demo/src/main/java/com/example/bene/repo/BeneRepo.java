@@ -69,7 +69,7 @@ public class BeneRepo {
 
        try(PreparedStatement ps = con.prepareStatement(insertbene,Statement.RETURN_GENERATED_KEYS)){
            ps.setString(INT_BENE_NAME,bene.getBeneName());
-           ps.setString(INT_BENE_NICK_NAME,bene.getBeneNicknName());
+           ps.setString(INT_BENE_NICK_NAME,bene.getBeneNickName());
            ps.setString(INT_MOBILE,bene.getMobile());
            ps.setString(INT_EMAIL,bene.getEmail());
            ps.setString(INT_REFERENCE_ID,bene.getReferenceId());
@@ -129,7 +129,7 @@ public class BeneRepo {
                    long beneId=rs.getLong("bene_id");
                    bene.setBeneId(beneId);
                    bene.setBeneName(rs.getString("bene_name"));
-                   bene.setBeneNicknName(rs.getString("bene_nick_name"));
+                   bene.setBeneNickName(rs.getString("bene_nick_name"));
                    bene.setMobile(rs.getString("mobile"));
                    bene.setEmail(rs.getString("email"));
                    bene.setReferenceId(rs.getString("referenceId"));
@@ -264,9 +264,9 @@ public class BeneRepo {
             ps.setDate(4, request.getLastupdated());
             ps.setString(5,request.getStatus());
             ps.setString(6,request.getRemarks());
-            ps.setString(7,request.getBeneNicknName());
+            ps.setString(7,request.getBeneNickName());
             ps.executeUpdate();
-            Bene bn = findone(request.getBeneNicknName());
+            Bene bn = findone(request.getBeneNickName());
 
             if(request.getAccount()!=null) {
                 for (Account ac : request.getAccount()) {

@@ -1,7 +1,6 @@
 package com.example.bene.service;
 
 
-import ch.qos.logback.core.testUtil.RandomUtil;
 import com.example.bene.dto.*;
 import com.example.bene.entity.MfaRequest;
 import com.example.bene.exception.BeneficiaryException;
@@ -10,26 +9,19 @@ import com.example.bene.repo.BeneRepo;
 import com.example.bene.repo.MfaTokenRepo;
 import com.example.bene.util.EmailUtil;
 import com.example.bene.validator.BeneValidation;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class BeneService {
@@ -77,7 +69,7 @@ public class BeneService {
             }
         }
         response.setStatus(status);
-        response.setBeneNickName(bene.getBeneNicknName());
+        response.setBeneNickName(bene.getBeneNickName());
         response.setCreatedDate(new Date(System.currentTimeMillis()));
        return response;
    }
@@ -139,13 +131,13 @@ public class BeneService {
     public AmendBeneResponse amend(Amend request) throws SQLException {
        AmendBeneResponse response = new AmendBeneResponse();
        String status="";
-       if(request.getBeneNicknName()!=null){
+       if(request.getBeneNickName()!=null){
             beneValidation.amend(request);
             log.info("amend validation success");
             status= benerepo.amend(request);
         }
        response.setStatus(status);
-       response.setBeneNickName(request.getBeneNicknName());
+       response.setBeneNickName(request.getBeneNickName());
        response.setLastUpdatedat(new Date(System.currentTimeMillis()));
        return response;
       }
@@ -176,18 +168,17 @@ public class BeneService {
 
         if (request.getMfaToken() == null) {
 
-
             MfaRequest req = new MfaRequest();
             String token = "BENE" + UUID.randomUUID().toString();
             String otp = String.format("%06d", new SecureRandom().nextInt(1000000));
 
-            req.setToken(token);
-            req.setOtp(otp);
-            req.setStatus("Pending");
-            req.setExpiredat(java.sql.Timestamp.valueOf(LocalDateTime.now().plusMinutes(2)));
-            req.setAttempt(3);       // attempts remaining, persisted on the entity
-            req.setLocked(false);
-            mfaTokenRepo.save(req);
+                req.setToken(token);
+                req.setOtp(otp);
+                req.setStatus("Pending");
+                req.setExpiredat(java.sql.Timestamp.valueOf(LocalDateTime.now().plusMinutes(2)));
+                req.setAttempt(3);       // attempts remaining, persisted on the entity
+                req.setLocked(false);
+                mfaTokenRepo.save(req);
 
             response.setOtp(otp);
             response.setMfaToken(token);
@@ -213,6 +204,8 @@ public class BeneService {
                 req.setAttempt(remaining);
                 if (remaining <= 0) {
                     req.setLocked(true);
+                    mfaTokenRepo.save(req);
+                    BeneValidation.applyError("Maximum limit reached please try again after some time");
                 }
                 mfaTokenRepo.save(req);
                 BeneValidation.applyError("Invalid OTP");

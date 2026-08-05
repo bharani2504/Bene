@@ -4,7 +4,6 @@ import com.example.bene.dto.*;
 import com.example.bene.service.BeneService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -35,7 +34,7 @@ public class BeneController {
 
     @PostMapping("/detail")
     public ResponseEntity<Bene> Detail(@RequestBody Bene bene) throws SQLException {
-            Bene bn = beneService.find(bene.getBeneNicknName());
+            Bene bn = beneService.find(bene.getBeneNickName());
         return new ResponseEntity<>(bn,HttpStatus.OK);
     }
 
@@ -68,6 +67,7 @@ public class BeneController {
     }
 
     @PostMapping("/authorize")
+    @PreAuthorize("hasRole('AUTHORIZER')")
     public ResponseEntity<AuthorizeResponse> authorize(@RequestBody AuthorizeRequest request) throws SQLException {
         AuthorizeResponse response = beneService.authorize(request);
         return new ResponseEntity<>(response,HttpStatus.OK);

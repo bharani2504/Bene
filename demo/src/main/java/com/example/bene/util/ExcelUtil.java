@@ -34,7 +34,7 @@ public class ExcelUtil {
            }
            bene.setBeneId((long) row.getCell(0).getNumericCellValue());
            bene.setBeneName(row.getCell(1).getStringCellValue());
-           bene.setBeneNicknName(row.getCell(2).getStringCellValue());
+           bene.setBeneNickName(row.getCell(2).getStringCellValue());
            bene.setEmail(row.getCell(3).getStringCellValue());
            bene.setMobile(row.getCell(4).getStringCellValue());
            bene.setStatus("Approved");

@@ -33,20 +33,20 @@ public class BeneValidation {
     public void submitRequestValidation (Bene bene) throws SQLException {
 
         log.info("request=>",bene);
-        if(bene.getBeneNicknName()!=null){
+        if(bene.getBeneNickName()!=null){
 
-            Bene bn=benerepo.findone(bene.getBeneNicknName());
-            if(bene.getBeneNicknName()==null){
+            Bene bn=benerepo.findone(bene.getBeneNickName());
+            if(bene.getBeneNickName()==null){
                applyError("bene nick name is mandatory");
             }
 
-            if(bn!=null && bn.getBeneNicknName()!=null) {
-                if (bn.getBeneNicknName().equals(bene.getBeneNicknName()) && bn.getDelFlag().equals("N")) {
+            if(bn!=null && bn.getBeneNickName()!=null) {
+                if (bn.getBeneNickName().equals(bene.getBeneNickName()) && bn.getDelFlag().equals("N")) {
                    applyError("Beneficiary nick name is already exsists");
                 }
             }
 
-            if( !bene.getBeneNicknName().matches("^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$")){
+            if( !bene.getBeneNickName().matches("^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$")){
                 applyError("Beneficiary nick name should contains only Alphanumeric");
             }
 
@@ -144,7 +144,7 @@ public class BeneValidation {
     public void amend(Amend request) throws SQLException {
 
         log.info("amend request request validation started");
-        Bene bn=benerepo.findone(request.getBeneNicknName());
+        Bene bn=benerepo.findone(request.getBeneNickName());
 
         if(bn.getDelFlag()!= null ){
           if( bn.getDelFlag().equals("Y")){
@@ -154,7 +154,7 @@ public class BeneValidation {
         if(bn==null){
             applyError("Beneficiary not found");
         }
-        if(!bn.getBeneNicknName().equalsIgnoreCase(request.getBeneNicknName())){
+        if(!bn.getBeneNickName().equalsIgnoreCase(request.getBeneNickName())){
             applyError("Beneficiary nick name is non amendable");
         }
 
