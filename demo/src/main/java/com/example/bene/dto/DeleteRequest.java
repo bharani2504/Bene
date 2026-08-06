@@ -11,4 +11,5 @@ public class DeleteRequest {
     private String remarks;
     private String status;
     private String requestType;
+    private String userCrn;
 }

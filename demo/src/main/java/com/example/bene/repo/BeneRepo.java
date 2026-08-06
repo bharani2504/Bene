@@ -46,12 +46,13 @@ public class BeneRepo {
     static final int INT_DEL_ACCT_FLAG=8;
     static final int INT_ACCOUNT_TYPE=9;
     static final int INT_DEFAULT_ACCT_FLAG=10;
+    static final int INT_USER_CRN=11;
 
     static final int GET_BENE_BY_NICK_NAME=1;
 
     private static final Logger log = LoggerFactory.getLogger(BeneRepo.class);
 
-    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate,status,migration_status,request_type) values(?,?,?,?,?,?,?,?,?,?)";
+    String insertbene="Insert into bene(bene_name,bene_nick_name,mobile,email,referenceId,delFlag,createdDate,status,migration_status,request_type,userCrn) values(?,?,?,?,?,?,?,?,?,?,?)";
     String insteraccount="Insert into account(bene_id,account_name,account_number,ifsc,amount,bank,branch,delAccFlag,accountType,default_Account_flag) values(?,?,?,?,?,?,?,?,?,?)";
 
     String findone="Select * from bene where bene_nick_name=?";
@@ -79,6 +80,7 @@ public class BeneRepo {
            ps.setString(INT_STATUS,bene.getStatus());
            ps.setString(INT_MIGRATION_STATUS,bene.getMigrationStatus());
            ps.setString(INT_REQUEST_TYPE,bene.getRequestType());
+           ps.setString(INT_USER_CRN,bene.getUserCrn());
            ps.executeUpdate();
 
            ResultSet re = ps.getGeneratedKeys();
@@ -139,6 +141,7 @@ public class BeneRepo {
                    bene.setCreatedDate(rs.getDate("createdDate"));
                    bene.setStatus(rs.getString("status"));
                    bene.setRequestType(rs.getString("request_type"));
+                   bene.setUserCrn(rs.getString("userCrn"));
                    ps1.setLong(1,beneId);
                    ResultSet rs2=ps1.executeQuery();
 
@@ -170,20 +173,10 @@ public class BeneRepo {
 
            int pg=0;
            int size=0;
-           String selectAll="";
-           if(request.getSort()!=null && request.getPage()!=null){
-               int page =request.getPage().get(0).getPage();
-               size=request.getPage().get(0).getSize();
-               pg=page*size;
-               String  value =request.getSort().get(0).getSortBy();
-               String sortOrder=request.getSort().get(0).getSort();
-            selectAll = "SELECT * FROM bene ORDER BY " + value + " " + sortOrder + " LIMIT ?, ?";
-           }
-           else{
-
-               StringBuilder whereClause = new StringBuilder();
-               List<Object> params = new ArrayList<>();
-               for(Filter filter:request.getFilters()) {
+           StringBuilder query = new StringBuilder("SELECT * FROM bene ");
+           StringBuilder whereClause = new StringBuilder();
+           if(request.getFilters()!=null) {
+               for (Filter filter : request.getFilters()) {
                    String name = filter.getName();
                    String filedValue = filter.getValue();
                    if (whereClause.length() > 0) {
@@ -191,12 +184,22 @@ public class BeneRepo {
                    } else {
                        whereClause.append("WHERE ");
                    }
-                   whereClause.append(name).append(" = ").append("'"+filedValue+"'");
+                   whereClause.append(name).append(" = ").append("'" + filedValue + "'");
                }
-               selectAll = "SELECT * FROM bene " + whereClause ;
+
+               query.append(whereClause);
            }
 
-
+           if(request.getSort()!=null && request.getPage()!=null){
+               int page =request.getPage().get(0).getPage();
+               size=request.getPage().get(0).getSize();
+               pg=page*size;
+               String  value =request.getSort().get(0).getSortBy();
+               String sortOrder=request.getSort().get(0).getSort();
+               String  select = " ORDER BY " + value + " " + sortOrder + " LIMIT ?, ?";
+               query.append(select);
+           }
+           String selectAll=query.toString();
            try (PreparedStatement ps = con.prepareStatement(selectAll)){
                if(request.getSort()!=null && request.getPage()!=null) {
                    ps.setInt(1, pg);

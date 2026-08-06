@@ -53,6 +53,8 @@ public class Bene {
 
     private String requestType;
 
+    private String userCrn;
+
     private List<Account> account;
 
 }

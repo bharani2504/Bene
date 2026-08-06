@@ -7,8 +7,10 @@ import com.example.bene.exception.BeneficiaryException;
 import com.example.bene.lock.BeneLock;
 import com.example.bene.repo.BeneRepo;
 import com.example.bene.repo.MfaTokenRepo;
+import com.example.bene.security.Jwt;
 import com.example.bene.util.EmailUtil;
 import com.example.bene.validator.BeneValidation;
+import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -31,17 +33,19 @@ public class BeneService {
     private static BeneValidation beneValidation;
     private static BeneLock beneLock;
     private static MfaTokenRepo mfaTokenRepo;
+    private static Jwt jwt;
 
 
     private Bene bene;
     private EmailUtil emailUtil;
 
-    public BeneService(BeneRepo benerepo, EmailService emailService, BeneValidation beneValidation, BeneLock beneLock, MfaTokenRepo mfaTokenRepo){
+    public BeneService(BeneRepo benerepo, EmailService emailService, BeneValidation beneValidation, BeneLock beneLock, MfaTokenRepo mfaTokenRepo,Jwt jw){
         this.benerepo=benerepo;
         this.emailService=emailService;
         this.beneValidation=beneValidation;
         this.beneLock=beneLock;
         this.mfaTokenRepo=mfaTokenRepo;
+        this.jwt=jwt;
     }
 
     private static final Logger log = LoggerFactory.getLogger(BeneService.class);
@@ -83,7 +87,7 @@ public class BeneService {
        BeneDeletedResponse response = new BeneDeletedResponse();
        String status="";
        String key = server + " " + request.getBeneNickName();
-        Lock lock=beneLock.obtainLock(key);
+       Lock lock=beneLock.obtainLock(key);
        if(request.getBeneNickName()!=null) {
            boolean acquired = false;
            try {
@@ -107,6 +111,7 @@ public class BeneService {
     }
 
     public ListResponse list(ListRequest request) throws SQLException {
+
         List response =benerepo.list(request);
         ListResponse re = new ListResponse();
         re.setData(response);

@@ -49,3 +49,6 @@ ALTER TABLE account MODIFY COLUMN  account_number VARCHAR(100) NOT NULL;
 
 --changeset beneficiary:Bene_table-2026080500
 ALTER table bene add column request_type VARCHAR(100);
+
+--changeset beneficiary:Bene_table-2026080600
+ALTER table bene add column userCrn VARCHAR(100);

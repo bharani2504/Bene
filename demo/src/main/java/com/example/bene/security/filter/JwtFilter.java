@@ -26,40 +26,40 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
 
-        String uri = request.getRequestURI();
-        if (uri.contains("/login") || (uri.contains("/corp/save"))) {
+        String uri =request.getRequestURI();
+        if (uri.contains("/login") ||(uri.contains("/corp/save"))) {
             filterChain.doFilter(request, response);
             return;
         }
-        if (request.getHeader("Authorization") != null) {
-            String headers = request.getHeader("Authorization");
-            if (headers == null || !headers.startsWith("Bearer ")) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.getWriter().write("Missing or invalid Authorization header");
-            }
-            String token = headers.substring(7);
 
-            try {
-                String userCrn = jwt.extractUserCrn(token);
-                boolean valid = jwt.validateToken(token, userCrn);
-                if (valid) {
-                    String role = jwt.extractRoles(token);
-
-                    UsernamePasswordAuthenticationToken auth =
-                            new UsernamePasswordAuthenticationToken(
-                                    userCrn,
-                                    null,
-                                    List.of(new SimpleGrantedAuthority("ROLE_" + role))
-                            );
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                } else {
-                    BeneValidation.applyError("The Given Token is Expired");
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            filterChain.doFilter(request, response);
-
+        String headers=request.getHeader("Authorization");
+        if (headers == null || !headers.startsWith("Bearer ")) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Missing or invalid Authorization header");
         }
+        String token = headers.substring(7);
+
+        try{
+            String userCrn=jwt.extractUserCrn(token);
+            boolean valid=jwt.validateToken(token,userCrn);
+            if(valid){
+                String role = jwt.extractRoles(token);
+
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                userCrn,
+                                null,
+                                List.of(new SimpleGrantedAuthority("ROLE_" + role))
+                        );
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+            else{
+                BeneValidation.applyError("The Given Token is Expired");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        filterChain.doFilter(request, response);
+
     }
 }

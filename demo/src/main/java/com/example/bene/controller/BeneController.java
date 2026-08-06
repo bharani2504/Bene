@@ -2,6 +2,7 @@ package com.example.bene.controller;
 
 import com.example.bene.dto.*;
 import com.example.bene.service.BeneService;
+import com.example.bene.util.ServiceUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,9 @@ public class BeneController {
     public ResponseEntity<BeneSubmitResponse> Submit(@RequestBody Bene bene) throws SQLException, IOException {
         String referenceId=beneService.referenceId();
         bene.setReferenceId(referenceId);
+        HttpServletRequest request= ServiceUtil.getServletRequest();
+        String userCrn=ServiceUtil.getUserCrn(request);
+        bene.setUserCrn(userCrn);
         BeneSubmitResponse response=beneService.insret(bene);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
@@ -39,11 +43,12 @@ public class BeneController {
     }
 
     @PostMapping("/delete")
+    @PreAuthorize("hasRole('MAKER')")
     public ResponseEntity<BeneDeletedResponse> delete(@RequestBody DeleteRequest request) throws SQLException {
-        String server="";
-        if(request instanceof HttpServletRequest httpRequest){
-            server=httpRequest.getRemoteAddr();
-        }
+        HttpServletRequest req= ServiceUtil.getServletRequest();
+        String server=req.getRemoteAddr();
+        String userCrn=ServiceUtil.getUserCrn(req);
+        request.setUserCrn(userCrn);
         BeneDeletedResponse response=beneService.delete(request,server);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
