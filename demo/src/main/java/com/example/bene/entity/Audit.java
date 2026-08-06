@@ -2,6 +2,8 @@ package com.example.bene.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.util.Date;
 @Data
 @Entity
 @Table(name ="BENE_INTEGRATION_AUDIT")
@@ -16,9 +18,6 @@ public class Audit {
 
     @Column(name = "operationName")
     private String operationName;
-
-    @Column(name = "beneNickName")
-    private String beneNickName;
 
     @Column(name = "referenceId")
     private String referenceId;
@@ -37,5 +36,11 @@ public class Audit {
 
     @Column(name = "service_url")
     private String serviceUrl;
+
+    @Column(name = "REQUEST_TIME")
+    private Date request_time;
+
+    @Column(name = "RESPONSE_TIME")
+    private Date response_time;
 
 }

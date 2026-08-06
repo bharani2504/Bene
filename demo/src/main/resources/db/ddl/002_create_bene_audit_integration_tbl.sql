@@ -16,3 +16,10 @@
 
 --changeset beneficiary:Bene_Auidt-2026070600
 ALTER table BENE_INTEGRATION_AUDIT add column service_url VARCHAR(255);
+
+--changeset beneficiary:Bene_Auidt-2026080600
+ALTER table BENE_INTEGRATION_AUDIT drop column beneNickName;
+
+--changeset beneficiary:Bene_Auidt-2026080601
+ALTER table BENE_INTEGRATION_AUDIT add column REQUEST_TIME TIMESTAMP(6);
+ALTER table BENE_INTEGRATION_AUDIT add column RESPONSE_TIME TIMESTAMP(6);

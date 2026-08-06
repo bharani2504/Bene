@@ -36,6 +36,7 @@ public class CommonService {
         ServiceResponse response =new ServiceResponse();
         if(request!=null){
             String url = prop.getProperty("ifsc.url");
+            response.setServiceUrl(url);
             Map<String, Object> resp = restTemplate.postForObject(url,request, Map.class);
             response.setData(resp);
             response.setStatus("SUCCESS");

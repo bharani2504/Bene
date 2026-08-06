@@ -9,5 +9,6 @@ public class ServiceResponse {
 
     private String status;
     private String responseString;
+    private String serviceUrl;
     private Map<String,Object>data;
 }

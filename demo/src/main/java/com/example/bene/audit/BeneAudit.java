@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
+import java.util.Date;
+
 @Aspect
 @Component
 @ConditionalOnProperty(name = "spring.audit.enabled", havingValue = "true", matchIfMissing = true)
@@ -27,6 +30,7 @@ public class BeneAudit {
     @Around("@annotation(auditLog)")
     public Object around (ProceedingJoinPoint joinPoint, AuditLog auditLog) throws Throwable {
 
+        Instant startTime = Instant.now();
         Object response= null;
         String serviceName=auditLog.serviceName();
         String operation= auditLog.operation();
@@ -42,10 +46,10 @@ public class BeneAudit {
         response= joinPoint.proceed();
         try {
             if (serviceRequest != null) {
-
+                Instant endTime = Instant.now();
                 if(response!=null && response instanceof ServiceResponse serviceResponse){
                      Audit audit=new Audit();
-                     extracted(audit,serviceRequest,serviceResponse,serviceName,operation);
+                     extracted(audit,serviceRequest,serviceResponse,serviceName,operation,startTime,endTime);
                      log.info("audit values has been set");
                      beneAuditService.createLog(audit);
                 }
@@ -56,14 +60,16 @@ public class BeneAudit {
      return response;
     }
 
-    public static void extracted(Audit audit,ServiceRequest request,ServiceResponse response,String servicename,String operation){
-
-        audit.setBeneNickName(request.getBeneNickname());
+    public static void extracted(Audit audit,ServiceRequest request,ServiceResponse response,String servicename,String operation,Instant startTime,Instant endTime){
         audit.setOperationName(operation);
         audit.setServiceName(servicename);
         audit.setStatus(response.getStatus());
         audit.setContext(request.getContext().toString());
         audit.setData(response.getData().toString());
         audit.setResponseString(response.getResponseString());
+        audit.setServiceUrl(response.getServiceUrl());
+        audit.setRequest_time(Date.from(startTime));
+        audit.setResponse_time(Date.from(endTime));
+        audit.setReferenceId(request.getRefenceID());
     }
 }
