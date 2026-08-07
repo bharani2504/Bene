@@ -229,7 +229,7 @@ public class BeneService {
                 }else {
                     bene.setStatus("Approved");
                 }
-                bene.setLastupdated(new java.sql.Date(System.currentTimeMillis()));
+                bene.setLastupdated(new Date(System.currentTimeMillis()));
             } else if ("Reject".equals(request.getAction())) {
                 if("Beneficiary Deletion".equalsIgnoreCase(bene.getRequestType())) {
                     if (bene.getDelFlag().equals("Y") && bene.getStatus().equals("Pending")) {
@@ -237,7 +237,7 @@ public class BeneService {
                     }
                 }
                 bene.setStatus("Rejected");
-                bene.setLastupdated(new java.sql.Date(System.currentTimeMillis()));
+                bene.setLastupdated(new Date(System.currentTimeMillis()));
                 bene.setRemarks(request.getRejectReason());
             } else {
                 BeneValidation.applyError("Invalid action. Must be Approve or Reject");

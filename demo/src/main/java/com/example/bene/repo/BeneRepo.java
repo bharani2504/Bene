@@ -76,7 +76,7 @@ public class BeneRepo {
            ps.setString(INT_EMAIL,bene.getEmail());
            ps.setString(INT_REFERENCE_ID,bene.getReferenceId());
            ps.setString(INT_DEL_FLAG,bene.getDelFlag());
-           ps.setDate(INT_CREATED_DATE,bene.getCreatedDate());
+           ps.setTimestamp(INT_CREATED_DATE, new Timestamp(bene.getCreatedDate().getTime()));
            ps.setString(INT_STATUS,bene.getStatus());
            ps.setString(INT_MIGRATION_STATUS,bene.getMigrationStatus());
            ps.setString(INT_REQUEST_TYPE,bene.getRequestType());
@@ -268,7 +268,7 @@ public class BeneRepo {
             ps.setString(1,request.getBeneName());
             ps.setString(2,request.getMobile());
             ps.setString(3,request.getEmail());
-            ps.setDate(4, request.getLastupdated());
+            ps.setTimestamp(4, new Timestamp(request.getLastupdated().getTime()));
             ps.setString(5,request.getStatus());
             ps.setString(6,request.getRemarks());
             ps.setString(7,request.getRequestType());
@@ -303,6 +303,35 @@ public class BeneRepo {
         finally {
             con.close();
         }
+    }
+
+      public Account findAccount(String accountNumber) throws SQLException {
+
+        Connection con= DriverManager.getConnection(url,userName,password);
+        String select="select * from Account where account_number=?";
+
+        Account ac= new Account();
+        try(PreparedStatement ps = con.prepareStatement(select)) {
+            ps.setString(1, accountNumber);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ac.setAccountName(rs.getString("account_name"));
+                ac.setAccountNumber(rs.getString("account_number"));
+                ac.setIFSC(rs.getString("ifsc"));
+                ac.setAmount(rs.getDouble("amount"));
+                ac.setBank(rs.getString("bank"));
+                ac.setId(rs.getLong("account_id"));
+                ac.setBranch(rs.getString("branch"));
+                ac.setDeleAcctFlag(rs.getString("delAccFlag"));
+                ac.setAccountType(rs.getString("accountType"));
+                ac.setDefautAcctFlag(rs.getString("default_Account_flag"));
+                ac.setBeneId(rs.getLong("bene_id"));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+      return ac;
     }
 }
 

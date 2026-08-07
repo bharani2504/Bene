@@ -81,6 +81,11 @@ public class BeneValidation {
             }
             ifscValidation(bene);
             for(Account ac : bene.getAccount()){
+                String accountNumber=ac.getAccountNumber();
+                Account act = benerepo.findAccount(accountNumber);
+                    if (act.getAccountNumber()!=null && act.getAccountNumber().equals(accountNumber)) {
+                        applyError("account number already exsits");
+                    }
                 if(ac.getAccountNumber()==null){
                     applyError("account number is mandatory");
                 }
