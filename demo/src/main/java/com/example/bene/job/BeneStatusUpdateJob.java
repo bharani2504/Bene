@@ -31,16 +31,8 @@ public class BeneStatusUpdateJob {
 
         ListRequest request = new ListRequest();
         LocalDate sevenDaysBefore = LocalDate.now().minusDays(7);
-        List<Filter> filters = new ArrayList<>();
-        Filter filter = new Filter();
-        filter.setName("status");
-        filter.setValue("Pending");
-        Filter fil =new Filter();
-        fil.setName("createdDate");
-        fil.setValue(String.valueOf(sevenDaysBefore));
-        filters.add(filter);
-        filters.add(fil);
-        request.setFilters(filters);
+        request.getFilters().add(new Filter("status","Pending"));
+        request.getFilters().add(new Filter("createdDate",String.valueOf(sevenDaysBefore)));
         request.setFetchChild(true);
         List<Bene> bn = beneRepo.list(request);
         Date dt = new Date(System.currentTimeMillis());

@@ -9,6 +9,7 @@ import com.example.bene.repo.BeneRepo;
 import com.example.bene.repo.MfaTokenRepo;
 import com.example.bene.security.Jwt;
 import com.example.bene.util.EmailUtil;
+import com.example.bene.util.ServiceUtil;
 import com.example.bene.validator.BeneValidation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -112,12 +113,15 @@ public class BeneService {
 
     public ListResponse list(ListRequest request) throws SQLException {
 
+        HttpServletRequest req= ServiceUtil.getServletRequest();
+        String userCrn=ServiceUtil.getUserCrn(req);
+        request.getFilters().add(new Filter("userCrn",userCrn));
         List response =benerepo.list(request);
         ListResponse re = new ListResponse();
         re.setData(response);
         int total = response.size();
 
-        log.info("list size=>",total);
+        log.info("list size=>{}",total);
         if(!response.isEmpty()){
            re.setStatus("success");
            re.setTotal(total);
