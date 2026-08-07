@@ -8,5 +8,6 @@ import java.util.List;
 public class AnalyticalRequest {
 
     private List<Filter> filters;
+    private String pageCode;
 
 }

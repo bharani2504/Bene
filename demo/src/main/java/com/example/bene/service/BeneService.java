@@ -151,13 +151,6 @@ public class BeneService {
        return response;
       }
 
-    public List<AnalyticalResponse> analytical(AnalyticalRequest request) {
-       List<AnalyticalResponse> response = new ArrayList<>();
-        AnalyticalResponse rsp=new AnalyticalResponse();
-
-        return response;
-    }
-
     public AuthorizeResponse authorize(AuthorizeRequest request) throws SQLException {
 
         AuthorizeResponse response = new AuthorizeResponse();
@@ -255,5 +248,25 @@ public class BeneService {
             response.setStatus("Success");
             return response;
         }
+    }
+
+
+    public List<Map<String, Object>> analytical(AnalyticalRequest request) throws SQLException {
+
+        List<Map<String, Object>> responseList = new ArrayList<>();
+        HttpServletRequest req= ServiceUtil.getServletRequest();
+        String userCrn=ServiceUtil.getUserCrn(req);
+        request.getFilters().add(new Filter("userCrn",userCrn));
+
+        String[] statuses = {"Pending", "Approved", "Rejected"};
+        for (String status : statuses) {
+            request.getFilters().add(new Filter("status", status));
+            Map<String, Object> mp = new HashMap<>();
+            mp.put("status", status);
+            mp.putAll(benerepo.analytics(request));
+            responseList.add(mp);
+            request.getFilters().removeIf(filter -> "status".equals(filter.getName()));
+        }
+        return responseList;
     }
 }

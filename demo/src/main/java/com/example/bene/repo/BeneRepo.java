@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class BeneRepo {
@@ -332,6 +334,39 @@ public class BeneRepo {
             throw new RuntimeException(e);
         }
       return ac;
+    }
+
+     public Map<String, Object> analytics(AnalyticalRequest request) throws SQLException {
+         Connection con= DriverManager.getConnection(url,userName,password);
+         Map<String,Object>mp=new HashMap<>();
+         StringBuilder query = new StringBuilder("SELECT Count(*) FROM bene ");
+         StringBuilder whereClause = new StringBuilder();
+         if(request.getFilters()!=null) {
+             for (Filter filter : request.getFilters()) {
+                 String name = filter.getName();
+                 String filedValue = filter.getValue();
+                 if (whereClause.length() > 0) {
+                     whereClause.append(" AND ");
+                 } else {
+                     whereClause.append("WHERE ");
+                 }
+                 whereClause.append(name).append(" = ").append("'" + filedValue + "'");
+             }
+             query.append(whereClause);
+         }
+         String count=query.toString();
+         try (PreparedStatement ps = con.prepareStatement(count)){
+             ResultSet rs=ps.executeQuery();
+             if(rs.next()){
+                 int ct=rs.getInt(1);
+                 mp.put("count",ct);
+             }
+
+         }
+         catch (Exception e){
+             throw new RuntimeException(e);
+         }
+         return mp;
     }
 }
 

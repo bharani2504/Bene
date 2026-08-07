@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("bene")
@@ -66,8 +67,8 @@ public class BeneController {
     }
 
     @PostMapping("/analytical")
-    public ResponseEntity<List<AnalyticalResponse>> analytical(@RequestBody AnalyticalRequest request) throws Exception {
-        List<AnalyticalResponse> response=  beneService.analytical(request);
+    public ResponseEntity<List<Map<String,Object>>> analytical(@RequestBody AnalyticalRequest request) throws Exception {
+        List<Map<String,Object>> response=  beneService.analytical(request);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
