@@ -1,5 +1,6 @@
 package com.example.bene.util;
 
+import com.example.bene.dto.Account;
 import org.springframework.stereotype.Component;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
@@ -134,10 +135,18 @@ public class PdfDownload {
     private static String resolveBeneValue(Map<String, Object> bene, String columnName) {
 
         if ("accountNumber".equalsIgnoreCase(columnName)) {
-            String actualName = safeString(bene.get("beneActualName"));
+            Object accountObj = bene.get("account");
+            String accountNumber = "NA";
 
-            return !"NA".equalsIgnoreCase(actualName) ? actualName : safeString(bene.get("accountNickname"));
+            if (accountObj instanceof List<?> accountList && !accountList.isEmpty()) {
+                Object first = accountList.get(0);
+                if (first instanceof Map<?, ?> account) {
+                    accountNumber = String.valueOf(account.get("accountNumber"));
+                }
+                return accountNumber;
+            }
         }
+
         return safeString(bene.get(columnName));
     }
 
