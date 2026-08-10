@@ -1,6 +1,7 @@
 package com.example.bene.controller;
 
 import com.example.bene.dto.*;
+import com.example.bene.service.BeneDownloadService;
 import com.example.bene.service.BeneService;
 import com.example.bene.util.ServiceUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +26,9 @@ public class BeneController {
 
     @Autowired
     private BeneService beneService;
+
+    @Autowired
+    private BeneDownloadService downloadService;
 
     @PostMapping("/submit")
     @PreAuthorize("hasRole('MAKER')")
@@ -78,4 +83,11 @@ public class BeneController {
         AuthorizeResponse response = beneService.authorize(request);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    @PostMapping("/download")
+    public ResponseEntity<DownloadResponse> analytical(@RequestBody DownloadRequest request) throws Exception {
+        DownloadResponse response=downloadService.download(request);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
 }
