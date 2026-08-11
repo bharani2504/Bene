@@ -79,7 +79,7 @@ public class BeneDownloadService {
 
     private List<Map<String, String>> pendingColumns() {
         List<Map<String, String>> cols = baseColumns();
-        cols.add(col("PendingWith", "Authorizer"));
+        cols.add(col("PendingWith", "PendingWith"));
         return cols;
     }
 

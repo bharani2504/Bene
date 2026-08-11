@@ -108,6 +108,10 @@ public class PdfDownload {
                     table.addCell(String.valueOf(serialNo));
                     continue;
                 }
+                if("PendingWith".equals(columnName)) {
+                    table.addCell("Authorizer");
+                    continue;
+                }
                 preprocessDatesAndStatus(bene, columnName);
 
                 table.addCell(createCell(resolveBeneValue(bene, columnName)));
