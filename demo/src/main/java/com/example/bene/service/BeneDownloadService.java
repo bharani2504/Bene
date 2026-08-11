@@ -2,11 +2,13 @@ package com.example.bene.service;
 
 import com.example.bene.dto.*;
 import com.example.bene.repo.BeneRepo;
+import com.example.bene.util.ExcelDownload;
 import com.example.bene.util.PdfDownload;
 import com.example.bene.util.ServiceUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -100,9 +102,9 @@ public class BeneDownloadService {
     }
 
 
-    private Map<String, Object> generateFile(String mimeType, HashMap<String, Object> params) {
+    private Map<String, Object> generateFile(String mimeType, HashMap<String, Object> params) throws Exception {
         if ("application/vnd.ms-excel".equalsIgnoreCase(mimeType)) {
-//            return BeneOpsExcelGenerator.buildExcelDocument(params);
+            return ExcelDownload.buildExcelDocument(params);
         }
 
         if ("application/pdf".equalsIgnoreCase(mimeType)) {

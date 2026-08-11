@@ -138,19 +138,24 @@ public class PdfDownload {
 
     private static String resolveBeneValue(Map<String, Object> bene, String columnName) {
 
-        if ("accountNumber".equalsIgnoreCase(columnName)) {
-            Object accountObj = bene.get("account");
-            String accountNumber = "NA";
+        if ("accountNumber".equalsIgnoreCase(columnName) || "IFSC".equalsIgnoreCase(columnName)) {
 
+            Object accountObj = bene.get("account");
             if (accountObj instanceof List<?> accountList && !accountList.isEmpty()) {
                 Object first = accountList.get(0);
+
                 if (first instanceof Map<?, ?> account) {
-                    accountNumber = String.valueOf(account.get("accountNumber"));
+
+                    if ("accountNumber".equalsIgnoreCase(columnName)) {
+                        return String.valueOf(account.get("accountNumber"));
+                    }
+
+                    if ("IFSC".equalsIgnoreCase(columnName)) {
+                        return String.valueOf(account.get("IFSC"));
+                    }
                 }
-                return accountNumber;
             }
         }
-
         return safeString(bene.get(columnName));
     }
 
