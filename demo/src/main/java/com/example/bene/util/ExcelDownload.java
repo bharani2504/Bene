@@ -107,7 +107,7 @@ public class ExcelDownload {
                         }
 
                         if ("IFSC".equalsIgnoreCase(columnName)) {
-                            return String.valueOf(account.get("IFSC"));
+                            return String.valueOf(account.get("ifsc"));
                         }
                     }
                 }

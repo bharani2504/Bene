@@ -1,23 +1,14 @@
 package com.example.bene.util;
 
-import com.example.bene.dto.Account;
 import org.springframework.stereotype.Component;
 import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.*;
-import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.collections4.MapUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestAttributes;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
