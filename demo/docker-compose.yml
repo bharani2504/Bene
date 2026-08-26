@@ -1,14 +1,15 @@
 version: '3'
+
 services:
   db:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: 250408
+      MYSQL_ROOT_PASSWORD: "2006"
       MYSQL_DATABASE: BENE
     ports:
       - "3307:3306"
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p250408" ]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p2006"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -20,7 +21,7 @@ services:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/BENE
       SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: "250408"
+      SPRING_DATASOURCE_PASSWORD: "2006"
     depends_on:
       db:
         condition: service_healthy
