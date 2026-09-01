@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bene-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bene
+  template:
+    metadata:
+      labels:
+        app: bene
+    spec:
+      containers:
+        - name: bene
+          image: bene:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: "jdbc:mysql://172.16.16.142:3306/BENE"
+            - name: SPRING_DATASOURCE_USERNAME
+              value: "root"
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: "2006"

@@ -310,7 +310,7 @@ public class BeneRepo {
       public Account findAccount(String accountNumber) throws SQLException {
 
         Connection con= DriverManager.getConnection(url,userName,password);
-        String select="select * from Account where account_number=?";
+        String select="select * from account where account_number=?";
 
         Account ac= new Account();
         try(PreparedStatement ps = con.prepareStatement(select)) {

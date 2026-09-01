@@ -32,7 +32,7 @@ public class BeneValidation {
     private static final Logger log = LoggerFactory.getLogger(BeneValidation.class);
     public void submitRequestValidation (Bene bene) throws SQLException {
 
-        log.info("request=>",bene);
+        log.info("validation started for bene submit");
         if(bene.getBeneNickName()!=null){
 
             Bene bn=benerepo.findone(bene.getBeneNickName());
