@@ -5,9 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,16 +18,6 @@ import java.util.Map;
 
 @Repository
 public class BeneRepo {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-    @Value("${spring.datasource.url}")
-    String url;
-    @Value("${spring.datasource.username}")
-    String userName;
-    @Value("${spring.datasource.password}")
-    String password;
-
 
     static final int INT_BENE_NAME=1;
     static final int INT_BENE_NICK_NAME=2;
@@ -63,15 +55,16 @@ public class BeneRepo {
     String beneupdate = "Update bene Set bene_name=?,mobile=?,email=?,lastupdated=?,status=?,remarks=?,request_type=? where bene_nick_name=?";
     String accupdate="Update account Set account_name=?,ifsc=?,amount=?,lastupdated=?,accountType=?,default_Account_flag=? where bene_id=?";
 
+     private final DataSource dataSource;
 
+    public BeneRepo(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     public String insert(Bene bene) throws SQLException {
 
-        Connection con= DriverManager.getConnection(url,userName,password);
-        con.setAutoCommit(false);
-
-
-       try(PreparedStatement ps = con.prepareStatement(insertbene,Statement.RETURN_GENERATED_KEYS)){
+       try(Connection con= dataSource.getConnection();
+           PreparedStatement ps = con.prepareStatement(insertbene,Statement.RETURN_GENERATED_KEYS)){
            ps.setString(INT_BENE_NAME,bene.getBeneName());
            ps.setString(INT_BENE_NICK_NAME,bene.getBeneNickName());
            ps.setString(INT_MOBILE,bene.getMobile());
@@ -111,22 +104,19 @@ public class BeneRepo {
            }
        catch(Exception e)
        {
-           con.rollback();
            log.warn("exception occured",e);
            return "Failed";
        }
-       finally {
-           con.close();
-       }
-       }
+    }
 
        public Bene findone(String beneNicknName) throws SQLException {
-           Connection con= DriverManager.getConnection(url,userName,password);
+
 
            Bene bene=new Bene();
            List<Account>accounts=new ArrayList<>();
 
-           try(PreparedStatement ps = con.prepareStatement(findone);
+           try( Connection con= dataSource.getConnection();
+                PreparedStatement ps = con.prepareStatement(findone);
                PreparedStatement ps1 = con.prepareStatement(accQuery)){
                ps.setString(GET_BENE_BY_NICK_NAME,beneNicknName);
                ResultSet rs =ps.executeQuery();
@@ -171,7 +161,6 @@ public class BeneRepo {
     public List list(ListRequest request) throws SQLException {
        List<Bene>beneList=new ArrayList<>();
        if(request.isFetchChild()){
-           Connection con = DriverManager.getConnection(url, userName, password);
 
            int pg=0;
            int size=0;
@@ -202,7 +191,8 @@ public class BeneRepo {
                query.append(select);
            }
            String selectAll=query.toString();
-           try (PreparedStatement ps = con.prepareStatement(selectAll)){
+           try (Connection con =dataSource.getConnection();
+                PreparedStatement ps = con.prepareStatement(selectAll)){
                if(request.getSort()!=null && request.getPage()!=null) {
                    ps.setInt(1, pg);
                    ps.setInt(2, size);
@@ -225,7 +215,6 @@ public class BeneRepo {
     }
 
    public String Delete(DeleteRequest request) throws SQLException {
-       Connection con = DriverManager.getConnection(url, userName, password);
        String delFlag=request.getDelFlag();
        String remarks= request.getRemarks();
        String  bene_nick_name= request.getBeneNickName();
@@ -236,7 +225,8 @@ public class BeneRepo {
        String delAccFlag="Y";
        String update ="Update Bene Set delFlag=?,remarks=?,status=?,request_type=? where bene_nick_name=?";
        String accupdate="Update account Set delAccFlag=? where bene_id=?";
-        try(PreparedStatement ps = con.prepareStatement(update);
+        try( Connection con =dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(update);
             PreparedStatement ps1= con.prepareStatement(accupdate))
         {
           ps.setString(1,delFlag);
@@ -253,7 +243,6 @@ public class BeneRepo {
 
         } catch(Exception e)
         {
-            con.rollback();
             log.warn("exception occured",e);
             return "Failed to delete";
         }
@@ -263,7 +252,7 @@ public class BeneRepo {
 
        public String amend(Amend request) throws SQLException {
 
-        Connection con= DriverManager.getConnection(url,userName,password);
+        Connection con= dataSource.getConnection();
         con.setAutoCommit(false);
 
         try(PreparedStatement ps = con.prepareStatement(beneupdate)){
@@ -309,11 +298,11 @@ public class BeneRepo {
 
       public Account findAccount(String accountNumber) throws SQLException {
 
-        Connection con= DriverManager.getConnection(url,userName,password);
         String select="select * from account where account_number=?";
 
         Account ac= new Account();
-        try(PreparedStatement ps = con.prepareStatement(select)) {
+        try( Connection con =dataSource.getConnection();
+             PreparedStatement ps = con.prepareStatement(select)) {
             ps.setString(1, accountNumber);
             ResultSet rs = ps.executeQuery();
 
@@ -337,7 +326,6 @@ public class BeneRepo {
     }
 
      public Map<String, Object> analytics(AnalyticalRequest request) throws SQLException {
-         Connection con= DriverManager.getConnection(url,userName,password);
          Map<String,Object>mp=new HashMap<>();
          StringBuilder query = new StringBuilder("SELECT Count(*) FROM bene ");
          StringBuilder whereClause = new StringBuilder();
@@ -355,7 +343,8 @@ public class BeneRepo {
              query.append(whereClause);
          }
          String count=query.toString();
-         try (PreparedStatement ps = con.prepareStatement(count)){
+         try ( Connection con= dataSource.getConnection();
+               PreparedStatement ps = con.prepareStatement(count)){
              ResultSet rs=ps.executeQuery();
              if(rs.next()){
                  int ct=rs.getInt(1);
