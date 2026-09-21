@@ -5,6 +5,9 @@ import com.example.bene.dto.Bene;
 import com.example.bene.dto.Filter;
 import com.example.bene.dto.ListRequest;
 import com.example.bene.repo.BeneRepo;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -18,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class BeneStatusUpdateJob {
+public class BeneStatusUpdateJob implements Job {
 
     private static final Logger log = LoggerFactory.getLogger(BeneStatusUpdateJob.class);
     private  static   BeneRepo beneRepo;
@@ -26,7 +29,17 @@ public class BeneStatusUpdateJob {
         this.beneRepo=beneRepo;
     }
 
-    @Scheduled(cron = "${bene.status.update.cron}")
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+
+        try {
+            updatePendingBene();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
     public static void updatePendingBene() throws SQLException {
 
         ListRequest request = new ListRequest();
