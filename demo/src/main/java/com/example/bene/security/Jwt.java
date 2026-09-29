@@ -27,6 +27,7 @@ public class Jwt {
         return Jwts.builder()
                 .claim("userCrn", user.getUserCrn())
                 .claim("role", user.getRole())
+                .claim("corpCrn",user.getCorpCRN())
                 .setSubject(user.getUserCrn())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
@@ -47,6 +48,10 @@ public class Jwt {
 
     public static String extractUserCrn(String token) {
         return getClaims(token).getSubject();
+    }
+
+    public static String extractCorpCrn(String token) {
+        return getClaims(token).get("corpCrn").toString();
     }
 
     public static String extractRoles(String token){

@@ -102,4 +102,16 @@ public class ServiceUtil {
 
     }
 
+    public static String getcorpCrn(Object req) {
+
+        if (req instanceof HttpServletRequest request) {
+            String header = request.getHeader("Authorization");
+            String token = header.substring(7);
+            String corpCrn = jwt.extractCorpCrn(token);
+            return corpCrn;
+        }
+
+        return null;
+    }
+
 }

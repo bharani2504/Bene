@@ -58,4 +58,6 @@ public class Bene {
 
     private List<Account> account;
 
+    private String corpCrn;
+
 }

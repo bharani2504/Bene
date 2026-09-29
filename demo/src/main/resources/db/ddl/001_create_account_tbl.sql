@@ -74,3 +74,6 @@ ALTER table bene add column request_type VARCHAR(100);
 
 --changeset beneficiary:Bene_table-2026080600
 ALTER table bene add column userCrn VARCHAR(100);
+
+--changeset beneficiary:Bene_table-2026090800
+ALTER table bene add column corpCrn VARCHAR(100);
