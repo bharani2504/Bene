@@ -25,21 +25,14 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-
-        String uri =request.getRequestURI();
-        if (uri.contains("/login") ||(uri.contains("/corp/save"))) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        String headers=request.getHeader("Authorization");
-        if (headers == null || !headers.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("Missing or invalid Authorization header");
-        }
-        String token = headers.substring(7);
-
         try{
+            String headers=request.getHeader("Authorization");
+            if (headers == null || !headers.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                 return;
+            }
+
+            String token = headers.substring(7);
             String userCrn=jwt.extractUserCrn(token);
             boolean valid=jwt.validateToken(token,userCrn);
             if(valid){

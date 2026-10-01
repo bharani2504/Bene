@@ -17,8 +17,6 @@ public class ScheduleConfig {
     @Value("${bene.status.update.cron}")
     private String cronExpression;
 
-    @Autowired
-    private Scheduler scheduler;
     @Bean
     public TaskScheduler taskScheduler() {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
